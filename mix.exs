@@ -22,7 +22,10 @@ defmodule Swisschema.MixProject do
   defp deps do
     [
       {:ecto, "~> 3.10"},
-      {:ecto_sql, "~> 3.10"}
+      {:ecto_sql, "~> 3.10"},
+
+      # dev/test
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false}
     ]
   end
 end
