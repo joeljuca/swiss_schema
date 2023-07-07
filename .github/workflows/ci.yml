@@ -1,0 +1,19 @@
+name: swisschema
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "25"
+          elixir-version: "1.14.4"
+
+      - run: mix deps.get + compile
+      - run: mix format --check-formatted
+      - run: mix dialyzer
+      - run: mix test
