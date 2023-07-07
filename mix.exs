@@ -25,7 +25,8 @@ defmodule Swisschema.MixProject do
       {:ecto_sql, "~> 3.10"},
 
       # dev/test
-      {:dialyxir, "~> 1.3", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
     ]
   end
 end
