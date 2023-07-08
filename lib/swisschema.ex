@@ -106,27 +106,31 @@ defmodule Swisschema do
       end
 
       @spec insert(
-              params :: %{required(atom()) => value},
+              params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
       def insert(%{} = params, opts \\ []) do
-        %{__struct__: __MODULE__}
-        |> __MODULE__.changeset(params)
+        changeset = Function.capture(__MODULE__, :changeset, 2)
+
+        struct(__MODULE__)
+        |> changeset.(params)
         |> unquote(repo).insert(opts)
       end
 
       @spec insert!(
-              params :: %{required(atom()) => value},
+              params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
       def insert!(%{} = params, opts \\ []) do
-        %{__struct__: __MODULE__}
-        |> __MODULE__.changeset(params)
+        changeset = Function.capture(__MODULE__, :changeset, 2)
+
+        struct(__MODULE__)
+        |> changeset.(params)
         |> unquote(repo).insert!(opts)
       end
 
       @spec insert_all(
-              entries :: [%{required(atom()) => value}] | Keyword.list(value),
+              entries :: [%{required(atom()) => term()}] | Keyword.list(term()),
               opts :: Keyword.t()
             ) :: {non_neg_integer(), nil | [term()]}
       def insert_all(entries, opts \\ []) do
@@ -151,23 +155,27 @@ defmodule Swisschema do
 
       @spec update(
               schema :: Ecto.Schema.t(),
-              params :: %{required(atom()) => value},
+              params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
       def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+        changeset = Function.capture(__MODULE__, :changeset, 2)
+
         schema
-        |> __MODULE__.changeset(params)
+        |> changeset.(params)
         |> unquote(repo).update(opts)
       end
 
       @spec update!(
               schema :: Ecto.Schema.t(),
-              params :: %{required(atom()) => value},
+              params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
       def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+        changeset = Function.capture(__MODULE__, :changeset, 2)
+
         schema
-        |> __MODULE__.changeset(params)
+        |> changeset.(params)
         |> unquote(repo).update!(opts)
       end
     end
