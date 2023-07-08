@@ -6,6 +6,8 @@ defmodule Swisschema do
   defmacro __using__(opts) do
     repo = Keyword.fetch!(opts, :repo)
 
+    # Ecto.Repo Query API
+
     quote do
       @spec aggregate(
               type :: :count,
@@ -81,6 +83,92 @@ defmodule Swisschema do
             ) :: {non_neg_integer(), nil | [term()]}
       def update_all(updates, opts \\ []) do
         unquote(repo).update_all(__MODULE__, updates, opts)
+      end
+    end
+
+    # Ecto.Repo Schema API
+
+    quote do
+      @spec delete(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      def delete(%__MODULE__{} = schema, opts \\ []) do
+        unquote(repo).delete(schema, opts)
+      end
+
+      @spec delete!(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def delete!(%__MODULE__{} = schema, opts \\ []) do
+        unquote(repo).delete(schema, opts)
+      end
+
+      @spec insert(
+              params :: %{required(atom()) => value},
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      def insert(%{} = params, opts \\ []) do
+        %__MODULE__{}
+        |> __MODULE__.changeset(params)
+        |> unquote(repo).insert(opts)
+      end
+
+      @spec insert!(
+              params :: %{required(atom()) => value},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def insert!(%{} = params, opts \\ []) do
+        %__MODULE__{}
+        |> __MODULE__.changeset(params)
+        |> unquote(repo).insert!(opts)
+      end
+
+      @spec insert_all(
+              entries :: [%{required(atom()) => value}] | Keyword.list(value),
+              opts :: Keyword.t()
+            ) :: {non_neg_integer(), nil | [term()]}
+      def insert_all(entries, opts \\ []) do
+        unquote(repo).insert_all(__MODULE__, entries, opts)
+      end
+
+      @spec insert_or_update(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      def insert_or_update(%__MODULE__{} = schema, opts \\ []) do
+        unquote(repo).insert_or_update(schema, opts)
+      end
+
+      @spec insert_or_update!(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def insert_or_update!(%__MODULE__{} = schema, opts \\ []) do
+        unquote(repo).insert_or_update!(schema, opts)
+      end
+
+      @spec update(
+              schema :: Ecto.Schema.t(),
+              params :: %{required(atom()) => value},
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      def update(%__MODULE__{} = schema, %{} = params, opts \\ []) do
+        schema
+        |> __MODULE__.changeset(params)
+        |> unquote(repo).update(opts)
+      end
+
+      @spec update!(
+              schema :: Ecto.Schema.t(),
+              params :: %{required(atom()) => value},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def update!(%__MODULE__{} = schema, %{} = params, opts \\ []) do
+        schema
+        |> __MODULE__.changeset(params)
+        |> unquote(repo).update!(opts)
       end
     end
   end
