@@ -8,7 +8,7 @@ defmodule Swisschema do
 
     quote do
       @spec aggregate(
-              aggregate :: :count,
+              type :: :count,
               opts :: Keyword.t()
             ) :: term() | nil
       def aggregate(:count, opts \\ []), do: unquote(repo).aggregate(__MODULE__, :count, opts)
@@ -18,7 +18,7 @@ defmodule Swisschema do
               field :: atom(),
               opts :: Keyword.t()
             ) :: term() | nil
-      def aggregate(type, field, opts \\ []), do: unquote(repo).aggregate(type, field, opts)
+      def aggregate(type, field, opts \\ []), do: unquote(repo).aggregate(__MODULE__, type, field, opts)
 
       @spec all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
       def all(opts \\ []), do: unquote(repo).all(__MODULE__, opts)
