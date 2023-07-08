@@ -11,7 +11,8 @@ defmodule Swisschema do
               type :: :count,
               opts :: Keyword.t()
             ) :: term() | nil
-      def aggregate(:count, opts \\ []), do: unquote(repo).aggregate(__MODULE__, :count, opts)
+      def aggregate(:count), do: unquote(repo).aggregate(__MODULE__, :count)
+      def aggregate(:count, opts), do: unquote(repo).aggregate(__MODULE__, :count, opts)
 
       @spec aggregate(
               type :: :avg | :count | :max | :min | :sum,
