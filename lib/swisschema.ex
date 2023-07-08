@@ -93,7 +93,7 @@ defmodule Swisschema do
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-      def delete(%__MODULE__{} = schema, opts \\ []) do
+      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).delete(schema, opts)
       end
 
@@ -101,7 +101,7 @@ defmodule Swisschema do
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
-      def delete!(%__MODULE__{} = schema, opts \\ []) do
+      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).delete(schema, opts)
       end
 
@@ -110,7 +110,7 @@ defmodule Swisschema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
       def insert(%{} = params, opts \\ []) do
-        %__MODULE__{}
+        %{__struct__: __MODULE__}
         |> __MODULE__.changeset(params)
         |> unquote(repo).insert(opts)
       end
@@ -120,7 +120,7 @@ defmodule Swisschema do
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
       def insert!(%{} = params, opts \\ []) do
-        %__MODULE__{}
+        %{__struct__: __MODULE__}
         |> __MODULE__.changeset(params)
         |> unquote(repo).insert!(opts)
       end
@@ -137,7 +137,7 @@ defmodule Swisschema do
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-      def insert_or_update(%__MODULE__{} = schema, opts \\ []) do
+      def insert_or_update(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).insert_or_update(schema, opts)
       end
 
@@ -145,7 +145,7 @@ defmodule Swisschema do
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
-      def insert_or_update!(%__MODULE__{} = schema, opts \\ []) do
+      def insert_or_update!(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).insert_or_update!(schema, opts)
       end
 
@@ -154,7 +154,7 @@ defmodule Swisschema do
               params :: %{required(atom()) => value},
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-      def update(%__MODULE__{} = schema, %{} = params, opts \\ []) do
+      def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
         schema
         |> __MODULE__.changeset(params)
         |> unquote(repo).update(opts)
@@ -165,7 +165,7 @@ defmodule Swisschema do
               params :: %{required(atom()) => value},
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
-      def update!(%__MODULE__{} = schema, %{} = params, opts \\ []) do
+      def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
         schema
         |> __MODULE__.changeset(params)
         |> unquote(repo).update!(opts)
