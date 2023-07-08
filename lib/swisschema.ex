@@ -57,7 +57,7 @@ defmodule Swisschema do
               updates :: Keyword.t(),
               opts :: Keyword.t()
             ) :: {non_neg_integer(), nil | [term()]}
-      def update_all(updates, opts \\ []), do: unquote(repo).update_all(__MODULE__, updates, tops)
+      def update_all(updates, opts \\ []), do: unquote(repo).update_all(__MODULE__, updates, opts)
     end
   end
 end
