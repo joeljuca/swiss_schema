@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +13,31 @@ jobs:
           otp-version: "25"
           elixir-version: "1.14.4"
 
-      - run: mix deps.get + compile
+      - run: mix do deps.get + deps.compile + compile
       - run: mix format --check-formatted
+
+  analysis:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "25"
+          elixir-version: "1.14.4"
+
+      - run: mix do deps.get + deps.compile + compile
       - run: mix dialyzer
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "25"
+          elixir-version: "1.14.4"
+
+      - run: mix do deps.get + deps.compile + compile
       - run: mix test
