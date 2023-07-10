@@ -7,7 +7,8 @@ defmodule SwissSchema.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package()
     ]
   end
 
@@ -27,6 +28,12 @@ defmodule SwissSchema.MixProject do
       # dev/test
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["Apache-2.0"]
     ]
   end
 end

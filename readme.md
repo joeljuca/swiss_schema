@@ -68,4 +68,4 @@ Also, `User.get(1)` is just easier to read and understand than `Repo.get(User, 1
 
 ## License
 
-TBD.
+[Apache License 2.0](license)
