@@ -6,8 +6,6 @@ defmodule SwissSchema do
   defmacro __using__(opts) do
     repo = Keyword.fetch!(opts, :repo)
 
-    # Ecto.Repo Query API
-
     quote do
       @spec aggregate(
               type :: :count,
@@ -84,11 +82,7 @@ defmodule SwissSchema do
       def update_all(updates, opts \\ []) do
         unquote(repo).update_all(__MODULE__, updates, opts)
       end
-    end
 
-    # Ecto.Repo Schema API
-
-    quote do
       @spec delete(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
