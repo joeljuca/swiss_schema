@@ -34,6 +34,7 @@ defmodule SwissSchema.MixProject do
 
       # dev/test
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.30.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
     ]
   end
