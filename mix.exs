@@ -1,9 +1,9 @@
-defmodule Swisschema.MixProject do
+defmodule SwissSchema.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :swisschema,
+      app: :swiss_schema,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,

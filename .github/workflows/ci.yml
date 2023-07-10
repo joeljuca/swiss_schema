@@ -1,4 +1,4 @@
-name: swisschema
+name: swiss_schema
 
 on:
   push:

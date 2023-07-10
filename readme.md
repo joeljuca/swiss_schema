@@ -1,10 +1,10 @@
-# Swisschema
+# SwissSchema
 
-![swisschema](https://github.com/joeljuca/swisschema/actions/workflows/ci.yml/badge.svg)
+![swiss_schema](https://github.com/joeljuca/swiss_schema/actions/workflows/ci.yml/badge.svg)
 
 **A Swiss Army knife for your Ecto schemas**
 
-Swisschema is a query toolkit for Ecto schemas. It makes it easy to manipulate
+SwissSchema is a query toolkit for Ecto schemas. It makes it easy to manipulate
 data using Ecto schemas by implementing relevant Ecto.Repo
 [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and
 [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions,
@@ -12,25 +12,25 @@ pre-configured to work specifically with the given Ecto schema.
 
 ## Setup
 
-Add `swisschema` as a dependency in `mix.exs`:
+Add `swiss_schema` as a dependency in `mix.exs`:
 
 ```elixir
 def deps do
   [
     # ...
-    {:swisschema, "~> 0.1"}
+    {:swiss_schema, "~> 0.1"}
   ]
 end
 ```
 
-Then, `use Swisschema` in your Ecto schemas:
+Then, `use SwissSchema` in your Ecto schemas:
 
 ```elixir
 # lib/my_app/accounts/user.ex
 
 def MyApp.Accounts.User do
   use Ecto.Schema
-  use Swisschema, repo: MyApp.Repo
+  use SwissSchema, repo: MyApp.Repo
 end
 ```
 
@@ -38,7 +38,7 @@ That's it, you should be good to go.
 
 ## Usage
 
-When you `use Swisschema`, a collection of pre-configured functions will be
+When you `use SwissSchema`, a collection of pre-configured functions will be
 added to your Ecto schema module. The functions are equivalent to two important
 Ecto.Repo APIs: the [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api)
 and the [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api).
@@ -62,7 +62,7 @@ If you find yourself asking what is the motivation for the creation of this modu
 
 Well, it's not always that easy. Understanding your domain without diving into it is almost impossible, and you'll most probably acquire a better understanding of your domain and the system you're building after you start building it.
 
-Swisschema allows you to start building your system without having to set context boundaries. You can just generate a Ecto schema, `use Swisschema` in it, and start manipulating data right away. And when time comes for you to turn your operations into real transactions, you slice your system into contexts, implement context modules, and start replacing Swisschema function calls with your context functions.
+SwissSchema allows you to start building your system without having to set context boundaries. You can just generate a Ecto schema, `use SwissSchema` in it, and start manipulating data right away. And when time comes for you to turn your operations into real transactions, you slice your system into contexts, implement context modules, and start replacing SwissSchema function calls with your context functions.
 
 Also, `User.get(1)` is just easier to read and understand than `Repo.get(User, 1)`. :)
 

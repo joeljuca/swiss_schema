@@ -1,6 +1,6 @@
-defmodule Swisschema do
+defmodule SwissSchema do
   @moduledoc """
-  Documentation for `Swisschema`.
+  Documentation for `SwissSchema`.
   """
 
   defmacro __using__(opts) do
