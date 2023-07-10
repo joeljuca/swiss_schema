@@ -1,14 +1,21 @@
 defmodule SwissSchema.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @source_url "https://github.com/joeljuca/swiss_schema"
+
   def project do
     [
       app: :swiss_schema,
-      version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package()
+
+      # Hex
+      package: package(),
+      version: @version,
+      description: "A Swiss Army knife for your Ecto schemas",
+      source_url: @source_url
     ]
   end
 
@@ -33,7 +40,8 @@ defmodule SwissSchema.MixProject do
 
   defp package do
     [
-      licenses: ["Apache-2.0"]
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
     ]
   end
 end
