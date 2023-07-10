@@ -54,7 +54,7 @@ iex> User.get_by(email: "john@smiths.net")
 The motivation to have such API directly in your Ecto schema is to make function
 calls more idiomatic.
 
-[Check the docs](#) for a complete list of available functions.
+[Check the docs](https://hexdocs.pm/swiss_schema) for a complete list of available functions.
 
 ## Why?
 
