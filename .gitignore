@@ -24,3 +24,6 @@ swiss_schema-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# macOS-related
+.DS_Store
