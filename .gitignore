@@ -27,3 +27,9 @@ swiss_schema-*.tar
 
 # macOS-related
 .DS_Store
+
+# SQLite test databases
+*.db
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
