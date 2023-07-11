@@ -2,36 +2,10 @@ defmodule SwissSchemaTest do
   use ExUnit.Case
   doctest SwissSchema
 
-  @database_path System.tmp_dir!() <> "db.sqlite"
+  @database_path Application.compile_env(:swiss_schema, SwissSchemaTest)
+                 |> Keyword.fetch!(:database_path)
 
-  defmodule SwissSchemaTest.Repo do
-    use Ecto.Repo,
-      otp_app: :swiss_schema,
-      adapter: Ecto.Adapters.SQLite3,
-      database: @database_path
-  end
-
-  defmodule SwissSchemaTest.User do
-    use Ecto.Schema
-    use SwissSchema, repo: SwissSchemaTest.Repo
-    import Ecto.Changeset
-
-    schema "users" do
-      field(:is_active, :boolean, default: true)
-      field(:username, :string)
-      field(:email, :string)
-    end
-
-    def changeset(%SwissSchemaTest.User{} = user, %{} = params) do
-      user
-      |> cast(params, [:is_active, :username, :email])
-      |> validate_required([:username, :email])
-    end
-  end
-
-  setup do
-    SwissSchemaTest.Repo.start_link()
-
+  setup_all do
     sql = """
       CREATE TABLE users (
         id INTEGER PRIMARY KEY,
@@ -41,10 +15,13 @@ defmodule SwissSchemaTest do
       )
     """
 
-    Ecto.Adapters.SQLite3.storage_up(database: @database_path)
+    Path.wildcard("#{@database_path}*") |> Enum.each(&File.rm!(&1))
+
     Ecto.Adapters.SQLite3.dump_cmd([sql], [], database: @database_path)
 
-    on_exit(fn -> File.rm!(@database_path) end)
+    on_exit(fn -> Path.wildcard("#{@database_path}*") |> Enum.each(&File.rm!(&1)) end)
+
+    SwissSchemaTest.Repo.start_link(database: @database_path)
 
     %{database_path: @database_path}
   end
