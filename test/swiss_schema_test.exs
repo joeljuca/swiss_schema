@@ -1,29 +1,18 @@
 defmodule SwissSchemaTest do
   use ExUnit.Case
   doctest SwissSchema
+  alias SwissSchemaTest.Repo
 
-  @database_path Application.compile_env(:swiss_schema, SwissSchemaTest)
-                 |> Keyword.fetch!(:database_path)
+  @database_path Application.compile_env!(:swiss_schema, :sqlite_database_path)
 
   setup_all do
-    sql = """
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY,
-        is_active INTEGER NOT NULL DEFAULT 1,
-        username TEXT NOT NULL,
-        email TEXT NOT NULL
-      )
-    """
-
-    Path.wildcard("#{@database_path}*") |> Enum.each(&File.rm!(&1))
-
-    Ecto.Adapters.SQLite3.dump_cmd([sql], [], database: @database_path)
-
-    on_exit(fn -> Path.wildcard("#{@database_path}*") |> Enum.each(&File.rm!(&1)) end)
+    File.rm(@database_path)
+    on_exit(fn -> File.rm(@database_path) end)
 
     SwissSchemaTest.Repo.start_link(database: @database_path)
+    Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
 
-    %{database_path: @database_path}
+    :ok
   end
 
   describe "use SwissSchema" do
