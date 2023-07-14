@@ -305,4 +305,26 @@ defmodule SwissSchemaTest do
       assert %User{username: "root"} = User.get_by!(username: "root")
     end
   end
+
+  describe "update_all/2" do
+    setup do
+      Enum.each([1, 2, 3, 4, 5], fn number ->
+        Repo.insert(%User{
+          username: Ecto.UUID.generate(),
+          email: "#{Ecto.UUID.generate()}@localhost",
+          lucky_number: number
+        })
+      end)
+    end
+
+    test "set multiple columns at once" do
+      assert {5, _} = User.update_all(set: [lucky_number: 5])
+    end
+
+    test "increment multiple columns at once" do
+      assert {5, _} = User.update_all(inc: [lucky_number: 3])
+
+      assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
+    end
+  end
 end
