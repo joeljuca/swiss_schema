@@ -255,4 +255,18 @@ defmodule SwissSchemaTest do
       assert [%User{}] = User.all()
     end
   end
+
+  describe "delete_all/1" do
+    setup do
+      on_exit(fn -> Repo.delete_all(User) end)
+    end
+
+    test "deletes all rows in a schema table" do
+      assert {0, _} = User.delete_all()
+
+      user_mock() |> Repo.insert()
+
+      assert {1, _} = User.delete_all()
+    end
+  end
 end
