@@ -337,4 +337,14 @@ defmodule SwissSchemaTest do
       assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
     end
   end
+
+  describe "delete!/2" do
+    setup do: %{user: user_mock() |> Repo.insert!()}
+
+    test "deletes one row", %{user: user} do
+      assert %User{} = User.delete!(user)
+
+      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
+    end
+  end
 end
