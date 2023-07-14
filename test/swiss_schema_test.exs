@@ -10,7 +10,7 @@ defmodule SwissSchemaTest do
     File.rm(@database_path)
     on_exit(fn -> File.rm(@database_path) end)
 
-    SwissSchemaTest.Repo.start_link(database: @database_path)
+    SwissSchemaTest.Repo.start_link(database: @database_path, log: false)
     Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
 
     :ok
