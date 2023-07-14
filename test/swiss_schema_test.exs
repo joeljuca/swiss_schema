@@ -16,6 +16,16 @@ defmodule SwissSchemaTest do
     :ok
   end
 
+  defp user_mock do
+    username = "user-#{Ecto.UUID.generate()}"
+
+    %User{
+      username: username,
+      email: username <> "@localhost",
+      lucky_number: Enum.random(1..1_000_000)
+    }
+  end
+
   describe "use SwissSchema" do
     test "requires a :repo option" do
       assert_raise KeyError, fn ->
@@ -229,6 +239,20 @@ defmodule SwissSchemaTest do
 
     test "aggregate(:sum, :field, _) process the :field sum" do
       assert User.aggregate(:sum, :lucky_number) == 15
+    end
+  end
+
+  describe "all/1" do
+    setup do
+      on_exit(fn -> Repo.delete_all(User) end)
+    end
+
+    test "returns all rows in a schema table" do
+      assert User.all() == []
+
+      user_mock() |> Repo.insert()
+
+      assert [%User{}] = User.all()
     end
   end
 end
