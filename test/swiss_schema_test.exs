@@ -257,4 +257,16 @@ defmodule SwissSchemaTest do
       assert {1, _} = User.delete_all()
     end
   end
+
+  describe "get/2" do
+    test "returns {:error, :not_found} when row is absent" do
+      assert {:error, :not_found} = User.get(1)
+    end
+
+    test "returns a row by ID" do
+      {:ok, %{id: id}} = user_mock() |> Repo.insert()
+
+      assert {:ok, %User{id: ^id}} = User.get(id)
+    end
+  end
 end
