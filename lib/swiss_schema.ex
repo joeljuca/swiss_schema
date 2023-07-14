@@ -41,9 +41,12 @@ defmodule SwissSchema do
       @spec get(
               id :: term(),
               opts :: Keyword.t()
-            ) :: Ecto.Schema.t() | term() | nil
+            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
       def get(id, opts \\ []) do
-        unquote(repo).get(__MODULE__, id, opts)
+        case unquote(repo).get(__MODULE__, id, opts) do
+          %{} = schema -> {:ok, schema}
+          nil -> {:error, :not_found}
+        end
       end
 
       @spec get!(
