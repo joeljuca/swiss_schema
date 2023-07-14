@@ -28,7 +28,7 @@ Then, `use SwissSchema` in your Ecto schemas:
 ```elixir
 # lib/my_app/accounts/user.ex
 
-def MyApp.Accounts.User do
+defmodule MyApp.Accounts.User do
   use Ecto.Schema
   use SwissSchema, repo: MyApp.Repo
 end
