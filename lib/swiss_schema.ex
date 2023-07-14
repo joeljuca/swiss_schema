@@ -60,9 +60,12 @@ defmodule SwissSchema do
       @spec get_by(
               clauses :: Keyword.t() | map(),
               opts :: Keyword.t()
-            ) :: Ecto.Schema.t() | term() | nil
+            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
       def get_by(clauses, opts \\ []) do
-        unquote(repo).get_by(__MODULE__, clauses, opts)
+        case unquote(repo).get_by(__MODULE__, clauses, opts) do
+          %{} = schema -> {:ok, schema}
+          nil -> {:error, :not_found}
+        end
       end
 
       @spec get_by!(
