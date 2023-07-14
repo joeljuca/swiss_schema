@@ -270,6 +270,18 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "get!/2" do
+    test "throws Ecto.NoResultsError when row is absent" do
+      assert_raise Ecto.NoResultsError, fn -> User.get!(1) end
+    end
+
+    test "returns a row by ID" do
+      %{id: id} = user_mock() |> Repo.insert!()
+
+      assert %User{id: ^id} = User.get!(id)
+    end
+  end
+
   describe "get_by/2" do
     test "returns {:error, :not_found} when row is absent" do
       assert {:error, :not_found} = User.get_by(username: "root")
