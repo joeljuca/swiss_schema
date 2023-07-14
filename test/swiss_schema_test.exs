@@ -327,4 +327,14 @@ defmodule SwissSchemaTest do
       assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
     end
   end
+
+  describe "delete/2" do
+    setup do: %{user: user_mock() |> Repo.insert!()}
+
+    test "deletes one row", %{user: user} do
+      assert {:ok, %User{}} = User.delete(user)
+
+      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
+    end
+  end
 end
