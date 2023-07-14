@@ -2,6 +2,7 @@ defmodule SwissSchemaTest do
   use ExUnit.Case
   doctest SwissSchema
   alias SwissSchemaTest.Repo
+  alias SwissSchemaTest.User
 
   @database_path Application.compile_env!(:swiss_schema, :sqlite_database_path)
 
@@ -171,6 +172,63 @@ defmodule SwissSchemaTest do
 
     test "define update!/3" do
       assert function_exported?(SwissSchemaTest.User, :update!, 3)
+    end
+  end
+
+  describe "aggregate/2" do
+    setup do
+      on_exit(fn -> Repo.delete_all(User) end)
+    end
+
+    test "accepts only :count as argument" do
+      Enum.each([:avg, :max, :min, :sum], fn type ->
+        assert_raise FunctionClauseError, fn -> User.aggregate(type) end
+      end)
+
+      User.aggregate(:count)
+    end
+
+    test "counts all rows in the schema table" do
+      assert User.aggregate(:count) == 0
+
+      Repo.insert(%User{username: "root", email: "root@localhost", lucky_number: 1})
+
+      assert User.aggregate(:count) == 1
+    end
+  end
+
+  describe "aggregate/3" do
+    setup do
+      [1, 2, 3, 4, 5]
+      |> Enum.each(fn number ->
+        Repo.insert(%User{
+          username: Ecto.UUID.generate(),
+          email: "#{Ecto.UUID.generate()}@localhost",
+          lucky_number: number
+        })
+      end)
+
+      on_exit(fn -> Repo.delete_all(User) end)
+    end
+
+    test "aggregate(:avg, :field, _) process the :field average" do
+      assert User.aggregate(:avg, :lucky_number) == 3.0
+    end
+
+    test "aggregate(:count, :field, _) process the :field count" do
+      assert User.aggregate(:count, :lucky_number) == 5
+    end
+
+    test "aggregate(:max, :field, _) process the :field max" do
+      assert User.aggregate(:max, :lucky_number) == 5
+    end
+
+    test "aggregate(:min, :field, _) process the :field min" do
+      assert User.aggregate(:min, :lucky_number) == 1
+    end
+
+    test "aggregate(:sum, :field, _) process the :field sum" do
+      assert User.aggregate(:sum, :lucky_number) == 15
     end
   end
 end
