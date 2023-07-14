@@ -102,7 +102,7 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
       def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).delete(schema, opts)
+        unquote(repo).delete!(schema, opts)
       end
 
       @spec insert(
