@@ -293,4 +293,16 @@ defmodule SwissSchemaTest do
       assert {:ok, %User{username: "root"}} = User.get_by(username: "root")
     end
   end
+
+  describe "get_by!/2" do
+    test "throws Ecto.NoResultsError when row is absent" do
+      assert_raise Ecto.NoResultsError, fn -> User.get_by!(username: "root") end
+    end
+
+    test "returns a row by ID" do
+      %User{username: "root", email: "a@b.c", lucky_number: 123} |> Repo.insert()
+
+      assert %User{username: "root"} = User.get_by!(username: "root")
+    end
+  end
 end
