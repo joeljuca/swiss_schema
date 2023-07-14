@@ -269,4 +269,16 @@ defmodule SwissSchemaTest do
       assert {:ok, %User{id: ^id}} = User.get(id)
     end
   end
+
+  describe "get_by/2" do
+    test "returns {:error, :not_found} when row is absent" do
+      assert {:error, :not_found} = User.get_by(username: "root")
+    end
+
+    test "returns a row by ID" do
+      %User{username: "root", email: "a@b.c", lucky_number: 123} |> Repo.insert()
+
+      assert {:ok, %User{username: "root"}} = User.get_by(username: "root")
+    end
+  end
 end
