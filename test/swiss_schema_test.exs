@@ -356,4 +356,19 @@ defmodule SwissSchemaTest do
       assert ^user = Repo.get!(User, user.id)
     end
   end
+
+  describe "insert_all/2" do
+    test "inserts multiple rows at once" do
+      params_list =
+        1..10
+        |> Enum.map(fn _ -> user_mock() |> Map.from_struct() end)
+        |> Enum.map(&Map.take(&1, [:username, :email, :lucky_number]))
+
+      assert {10, _} = User.insert_all(params_list)
+
+      Enum.each(Repo.all(User), fn user ->
+        assert Enum.any?(params_list, fn params -> user.email == params.email end)
+      end)
+    end
+  end
 end
