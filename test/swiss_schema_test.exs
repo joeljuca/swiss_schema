@@ -16,6 +16,8 @@ defmodule SwissSchemaTest do
     :ok
   end
 
+  setup do: on_exit(fn -> Repo.delete_all(User) end)
+
   defp user_mock do
     username = "user-#{Ecto.UUID.generate()}"
 
@@ -186,10 +188,6 @@ defmodule SwissSchemaTest do
   end
 
   describe "aggregate/2" do
-    setup do
-      on_exit(fn -> Repo.delete_all(User) end)
-    end
-
     test "accepts only :count as argument" do
       Enum.each([:avg, :max, :min, :sum], fn type ->
         assert_raise FunctionClauseError, fn -> User.aggregate(type) end
@@ -217,8 +215,6 @@ defmodule SwissSchemaTest do
           lucky_number: number
         })
       end)
-
-      on_exit(fn -> Repo.delete_all(User) end)
     end
 
     test "aggregate(:avg, :field, _) process the :field average" do
@@ -243,10 +239,6 @@ defmodule SwissSchemaTest do
   end
 
   describe "all/1" do
-    setup do
-      on_exit(fn -> Repo.delete_all(User) end)
-    end
-
     test "returns all rows in a schema table" do
       assert User.all() == []
 
@@ -257,10 +249,6 @@ defmodule SwissSchemaTest do
   end
 
   describe "delete_all/1" do
-    setup do
-      on_exit(fn -> Repo.delete_all(User) end)
-    end
-
     test "deletes all rows in a schema table" do
       assert {0, _} = User.delete_all()
 
