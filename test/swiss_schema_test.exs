@@ -347,4 +347,13 @@ defmodule SwissSchemaTest do
       assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
     end
   end
+
+  describe "insert/2" do
+    test "inserts a row" do
+      user = user_mock() |> Map.from_struct()
+
+      assert {:ok, %User{} = user} = User.insert(user)
+      assert ^user = Repo.get!(User, user.id)
+    end
+  end
 end
