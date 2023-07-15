@@ -45,6 +45,18 @@ defmodule SwissSchema do
         |> unquote(repo).insert(opts)
       end
 
+      @spec create!(
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def create!(%{} = params, opts \\ []) do
+        changeset = Function.capture(__MODULE__, :changeset, 2)
+
+        struct(__MODULE__)
+        |> changeset.(params)
+        |> unquote(repo).insert!(opts)
+      end
+
       @spec delete(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
