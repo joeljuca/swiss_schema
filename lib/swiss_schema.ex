@@ -33,6 +33,22 @@ defmodule SwissSchema do
         unquote(repo).all(__MODULE__, opts)
       end
 
+      @spec delete(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
+        unquote(repo).delete(schema, opts)
+      end
+
+      @spec delete!(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
+        unquote(repo).delete!(schema, opts)
+      end
+
       @spec delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
       def delete_all(opts \\ []) do
         unquote(repo).delete_all(__MODULE__, opts)
@@ -74,35 +90,6 @@ defmodule SwissSchema do
             ) :: Ecto.Schema.t() | term()
       def get_by!(clauses, opts \\ []) do
         unquote(repo).get_by!(__MODULE__, clauses, opts)
-      end
-
-      @spec stream(opts :: Keyword.t()) :: Enum.t()
-      def stream(opts \\ []) do
-        unquote(repo).stream(__MODULE__, opts)
-      end
-
-      @spec update_all(
-              updates :: Keyword.t(),
-              opts :: Keyword.t()
-            ) :: {non_neg_integer(), nil | [term()]}
-      def update_all(updates, opts \\ []) do
-        unquote(repo).update_all(__MODULE__, updates, opts)
-      end
-
-      @spec delete(
-              schema :: Ecto.Schema.t(),
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).delete(schema, opts)
-      end
-
-      @spec delete!(
-              schema :: Ecto.Schema.t(),
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
-      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).delete!(schema, opts)
       end
 
       @spec insert(
@@ -153,6 +140,11 @@ defmodule SwissSchema do
         unquote(repo).insert_or_update!(schema, opts)
       end
 
+      @spec stream(opts :: Keyword.t()) :: Enum.t()
+      def stream(opts \\ []) do
+        unquote(repo).stream(__MODULE__, opts)
+      end
+
       @spec update(
               schema :: Ecto.Schema.t(),
               params :: %{required(atom()) => term()},
@@ -177,6 +169,14 @@ defmodule SwissSchema do
         schema
         |> changeset.(params)
         |> unquote(repo).update!(opts)
+      end
+
+      @spec update_all(
+              updates :: Keyword.t(),
+              opts :: Keyword.t()
+            ) :: {non_neg_integer(), nil | [term()]}
+      def update_all(updates, opts \\ []) do
+        unquote(repo).update_all(__MODULE__, updates, opts)
       end
     end
   end

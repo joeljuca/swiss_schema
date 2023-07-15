@@ -248,6 +248,26 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "delete/2" do
+    setup do: %{user: user_mock() |> Repo.insert!()}
+
+    test "deletes one row", %{user: user} do
+      assert {:ok, %User{}} = User.delete(user)
+
+      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
+    end
+  end
+
+  describe "delete!/2" do
+    setup do: %{user: user_mock() |> Repo.insert!()}
+
+    test "deletes one row", %{user: user} do
+      assert %User{} = User.delete!(user)
+
+      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
+    end
+  end
+
   describe "delete_all/1" do
     test "deletes all rows in a schema table" do
       assert {0, _} = User.delete_all()
@@ -306,48 +326,6 @@ defmodule SwissSchemaTest do
     end
   end
 
-  describe "update_all/2" do
-    setup do
-      Enum.each([1, 2, 3, 4, 5], fn number ->
-        Repo.insert(%User{
-          username: Ecto.UUID.generate(),
-          email: "#{Ecto.UUID.generate()}@localhost",
-          lucky_number: number
-        })
-      end)
-    end
-
-    test "set multiple columns at once" do
-      assert {5, _} = User.update_all(set: [lucky_number: 5])
-    end
-
-    test "increment multiple columns at once" do
-      assert {5, _} = User.update_all(inc: [lucky_number: 3])
-
-      assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
-    end
-  end
-
-  describe "delete/2" do
-    setup do: %{user: user_mock() |> Repo.insert!()}
-
-    test "deletes one row", %{user: user} do
-      assert {:ok, %User{}} = User.delete(user)
-
-      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
-    end
-  end
-
-  describe "delete!/2" do
-    setup do: %{user: user_mock() |> Repo.insert!()}
-
-    test "deletes one row", %{user: user} do
-      assert %User{} = User.delete!(user)
-
-      assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
-    end
-  end
-
   describe "insert/2" do
     test "inserts a row" do
       user = user_mock() |> Map.from_struct()
@@ -369,6 +347,28 @@ defmodule SwissSchemaTest do
       Enum.each(Repo.all(User), fn user ->
         assert Enum.any?(params_list, fn params -> user.email == params.email end)
       end)
+    end
+  end
+
+  describe "update_all/2" do
+    setup do
+      Enum.each([1, 2, 3, 4, 5], fn number ->
+        Repo.insert(%User{
+          username: Ecto.UUID.generate(),
+          email: "#{Ecto.UUID.generate()}@localhost",
+          lucky_number: number
+        })
+      end)
+    end
+
+    test "set multiple columns at once" do
+      assert {5, _} = User.update_all(set: [lucky_number: 5])
+    end
+
+    test "increment multiple columns at once" do
+      assert {5, _} = User.update_all(inc: [lucky_number: 3])
+
+      assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
     end
   end
 end
