@@ -6,7 +6,7 @@ defmodule SwissSchemaTest.CreateUsers do
       add(:is_active, :boolean, null: false, default: true)
       add(:username, :string, null: false)
       add(:email, :string, null: false)
-      add(:lucky_number, :integer, null: false)
+      add(:lucky_number, :integer)
     end
   end
 end
