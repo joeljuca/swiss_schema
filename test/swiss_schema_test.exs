@@ -265,6 +265,23 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "create!/2" do
+    test "requires valid params" do
+      [
+        %{},
+        %{username: "john"},
+        %{email: "root@localhost"}
+      ]
+      |> Enum.each(fn params ->
+        assert_raise Ecto.InvalidChangesetError, fn -> User.create!(params) end
+      end)
+    end
+
+    test "creates a new row" do
+      assert %User{} = User.create!(%{username: "root", email: "root@localhost"})
+    end
+  end
+
   describe "delete/2" do
     setup do: %{user: user_mock() |> Repo.insert!()}
 
