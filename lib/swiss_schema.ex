@@ -141,7 +141,7 @@ defmodule SwissSchema do
       end
 
       @spec insert_all(
-              entries :: [%{required(atom()) => term()}] | Keyword.list(term()),
+              entries :: [%{required(atom()) => term()}] | Keyword.t(),
               opts :: Keyword.t()
             ) :: {non_neg_integer(), nil | [term()]}
       def insert_all(entries, opts \\ []) do
