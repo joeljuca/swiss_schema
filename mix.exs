@@ -9,6 +9,7 @@ defmodule SwissSchema.MixProject do
       app: :swiss_schema,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
 
       # Hex
@@ -18,6 +19,10 @@ defmodule SwissSchema.MixProject do
       source_url: @source_url
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(env) when env in [:dev, :test], do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
   def application do
