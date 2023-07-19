@@ -149,19 +149,19 @@ defmodule SwissSchema do
       end
 
       @spec insert_or_update(
-              schema :: Ecto.Schema.t(),
+              changeset :: Ecto.Changeset.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
-      def insert_or_update(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).insert_or_update(schema, opts)
+      def insert_or_update(%Ecto.Changeset{} = changeset, opts \\ []) do
+        unquote(repo).insert_or_update(changeset, opts)
       end
 
       @spec insert_or_update!(
-              schema :: Ecto.Schema.t(),
+              changeset :: Ecto.Changeset.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
-      def insert_or_update!(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).insert_or_update!(schema, opts)
+      def insert_or_update!(%Ecto.Changeset{} = changeset, opts \\ []) do
+        unquote(repo).insert_or_update!(changeset, opts)
       end
 
       @spec stream(opts :: Keyword.t()) :: Enum.t()
