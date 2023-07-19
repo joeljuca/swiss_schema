@@ -11,6 +11,7 @@ defmodule SwissSchemaTest do
     on_exit(fn -> File.rm(@database_path) end)
 
     SwissSchemaTest.Repo.start_link(database: @database_path, log: false)
+    Ecto.Adapters.SQLite3.storage_up(database: @database_path)
     Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
 
     :ok
