@@ -18,7 +18,7 @@ Add `swiss_schema` as a dependency in `mix.exs`:
 def deps do
   [
     # ...
-    {:swiss_schema, "~> 0.1"}
+    {:swiss_schema, "~> 0.3"}
   ]
 end
 ```
