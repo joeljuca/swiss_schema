@@ -1,4 +1,6 @@
 defmodule SwissSchemaTest.Repo do
+  @moduledoc false
+
   use Ecto.Repo,
     otp_app: :swiss_schema,
     adapter: Ecto.Adapters.SQLite3,

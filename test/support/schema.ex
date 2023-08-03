@@ -1,4 +1,6 @@
 defmodule SwissSchemaTest.User do
+  @moduledoc false
+
   use Ecto.Schema
   use SwissSchema, repo: SwissSchemaTest.Repo
   import Ecto.Changeset
