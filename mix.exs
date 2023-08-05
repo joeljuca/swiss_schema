@@ -16,7 +16,8 @@ defmodule SwissSchema.MixProject do
       package: package(),
       version: @version,
       description: "A Swiss Army knife for your Ecto schemas",
-      source_url: @source_url
+      source_url: @source_url,
+      docs: docs()
     ]
   end
 
@@ -49,6 +50,12 @@ defmodule SwissSchema.MixProject do
     [
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => @source_url}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "SwissSchema"
     ]
   end
 end
