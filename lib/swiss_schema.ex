@@ -23,6 +23,31 @@ defmodule SwissSchema do
       end
 
   That's it, you should be good to go.
+
+  ## Usage
+
+  After setting up SwissSchema in your Ecto schema, there isn't much else to do. Just use the available functions now available in your own schema module:
+
+      iex> alias MyApp.Accounts.User
+
+      iex> User.all()
+      []
+
+      iex> User.create(%{name: "John Smith", email: "john@smiths.net"})
+      {:ok, %User%{name: "John Smith", ...}}
+
+      iex> User.all()
+      [%User%{name: "John Smith", ...}]
+
+  `SwissSchema` functions tries to mimic the Ecto.Repo's Query and Repo APIs by acting as a thin, pre-configured interface for Ecto.Repo callbacks.
+
+  > #### Note {: .info}
+  >
+  > To keep examples short and simple, we use the example module from the previous section, `MyApp.Accounts.User`, in the functions documentation. So, when reading the docs for SwissSchema functions, assume the following alias was previously set up:
+  >
+  >     alias MyApp.Accounts.User
+  >
+  > So, the module `MyApp.Accounts.User` itself will be referred to just as `User`.
   """
 
   @callback aggregate(
