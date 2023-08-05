@@ -1,6 +1,32 @@
 defmodule SwissSchema do
   @moduledoc """
-  Documentation for `SwissSchema`.
+  `SwissSchema` is a query toolkit for Ecto schemas. It makes it easy to manipulate
+  data using Ecto schemas by implementing relevant Ecto.Repo
+  [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and
+  [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions,
+  pre-configured to work specifically with the given Ecto schema.
+
+  ## Setup
+
+  Add `swiss_schema` as a dependency in `mix.exs`:
+
+      def deps do
+      [
+        # ...
+        {:swiss_schema, "~> 0.3"}
+      ]
+      end
+
+  Then, `use SwissSchema` in your Ecto schemas:
+
+      # lib/my_app/accounts/user.ex
+
+      defmodule MyApp.Accounts.User do
+        use Ecto.Schema
+        use SwissSchema, repo: MyApp.Repo
+      end
+
+  That's it, you should be good to go.
   """
 
   defmacro __using__(opts) do
