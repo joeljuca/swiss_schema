@@ -25,14 +25,112 @@ defmodule SwissSchema do
   That's it, you should be good to go.
   """
 
+  @callback aggregate(
+              type :: :count,
+              opts :: Keyword.t()
+            ) :: term() | nil
+
+  @callback aggregate(
+              type :: :avg | :count | :max | :min | :sum,
+              field :: atom(),
+              opts :: Keyword.t()
+            ) :: term() | nil
+
+  @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
+
+  @callback create(
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+
+  @callback create!(
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+
+  @callback delete(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+
+  @callback delete!(
+              schema :: Ecto.Schema.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+
+  @callback delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
+
+  @callback get(
+              id :: term(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
+
+  @callback get!(
+              id :: term(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t() | term()
+
+  @callback get_by(
+              clauses :: Keyword.t() | map(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
+
+  @callback get_by!(
+              clauses :: Keyword.t() | map(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t() | term()
+
+  @callback insert(
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+
+  @callback insert!(
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+
+  @callback insert_all(
+              entries :: [%{required(atom()) => term()}] | Keyword.t(),
+              opts :: Keyword.t()
+            ) :: {non_neg_integer(), nil | [term()]}
+
+  @callback insert_or_update(
+              changeset :: Ecto.Changeset.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+
+  @callback insert_or_update!(
+              changeset :: Ecto.Changeset.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+
+  @callback stream(opts :: Keyword.t()) :: Enum.t()
+
+  @callback update(
+              schema :: Ecto.Schema.t(),
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+
+  @callback update!(
+              schema :: Ecto.Schema.t(),
+              params :: %{required(atom()) => term()},
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
+
+  @callback update_all(
+              updates :: Keyword.t(),
+              opts :: Keyword.t()
+            ) :: {non_neg_integer(), nil | [term()]}
+
   defmacro __using__(opts) do
     repo = Keyword.fetch!(opts, :repo)
 
     quote do
-      @spec aggregate(
-              type :: :count,
-              opts :: Keyword.t()
-            ) :: term() | nil
+      @behaviour SwissSchema
+
+      @impl SwissSchema
       def aggregate(:count) do
         unquote(repo).aggregate(__MODULE__, :count)
       end
@@ -41,24 +139,17 @@ defmodule SwissSchema do
         unquote(repo).aggregate(__MODULE__, :count, opts)
       end
 
-      @spec aggregate(
-              type :: :avg | :count | :max | :min | :sum,
-              field :: atom(),
-              opts :: Keyword.t()
-            ) :: term() | nil
+      @impl SwissSchema
       def aggregate(type, field, opts \\ []) do
         unquote(repo).aggregate(__MODULE__, type, field, opts)
       end
 
-      @spec all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
+      @impl SwissSchema
       def all(opts \\ []) do
         unquote(repo).all(__MODULE__, opts)
       end
 
-      @spec create(
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      @impl SwissSchema
       def create(%{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -67,10 +158,7 @@ defmodule SwissSchema do
         |> unquote(repo).insert(opts)
       end
 
-      @spec create!(
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
+      @impl SwissSchema
       def create!(%{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -79,31 +167,22 @@ defmodule SwissSchema do
         |> unquote(repo).insert!(opts)
       end
 
-      @spec delete(
-              schema :: Ecto.Schema.t(),
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      @impl SwissSchema
       def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).delete(schema, opts)
       end
 
-      @spec delete!(
-              schema :: Ecto.Schema.t(),
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
+      @impl SwissSchema
       def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
         unquote(repo).delete!(schema, opts)
       end
 
-      @spec delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
+      @impl SwissSchema
       def delete_all(opts \\ []) do
         unquote(repo).delete_all(__MODULE__, opts)
       end
 
-      @spec get(
-              id :: term(),
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
+      @impl SwissSchema
       def get(id, opts \\ []) do
         case unquote(repo).get(__MODULE__, id, opts) do
           %{} = schema -> {:ok, schema}
@@ -111,18 +190,12 @@ defmodule SwissSchema do
         end
       end
 
-      @spec get!(
-              id :: term(),
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t() | term()
+      @impl SwissSchema
       def get!(id, opts \\ []) do
         unquote(repo).get!(__MODULE__, id, opts)
       end
 
-      @spec get_by(
-              clauses :: Keyword.t() | map(),
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
+      @impl SwissSchema
       def get_by(clauses, opts \\ []) do
         case unquote(repo).get_by(__MODULE__, clauses, opts) do
           %{} = schema -> {:ok, schema}
@@ -130,18 +203,12 @@ defmodule SwissSchema do
         end
       end
 
-      @spec get_by!(
-              clauses :: Keyword.t() | map(),
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t() | term()
+      @impl SwissSchema
       def get_by!(clauses, opts \\ []) do
         unquote(repo).get_by!(__MODULE__, clauses, opts)
       end
 
-      @spec insert(
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      @impl SwissSchema
       def insert(%{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -150,10 +217,7 @@ defmodule SwissSchema do
         |> unquote(repo).insert(opts)
       end
 
-      @spec insert!(
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
+      @impl SwissSchema
       def insert!(%{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -162,40 +226,27 @@ defmodule SwissSchema do
         |> unquote(repo).insert!(opts)
       end
 
-      @spec insert_all(
-              entries :: [%{required(atom()) => term()}] | Keyword.t(),
-              opts :: Keyword.t()
-            ) :: {non_neg_integer(), nil | [term()]}
+      @impl SwissSchema
       def insert_all(entries, opts \\ []) do
         unquote(repo).insert_all(__MODULE__, entries, opts)
       end
 
-      @spec insert_or_update(
-              changeset :: Ecto.Changeset.t(),
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      @impl SwissSchema
       def insert_or_update(%Ecto.Changeset{} = changeset, opts \\ []) do
         unquote(repo).insert_or_update(changeset, opts)
       end
 
-      @spec insert_or_update!(
-              changeset :: Ecto.Changeset.t(),
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
+      @impl SwissSchema
       def insert_or_update!(%Ecto.Changeset{} = changeset, opts \\ []) do
         unquote(repo).insert_or_update!(changeset, opts)
       end
 
-      @spec stream(opts :: Keyword.t()) :: Enum.t()
+      @impl SwissSchema
       def stream(opts \\ []) do
         unquote(repo).stream(__MODULE__, opts)
       end
 
-      @spec update(
-              schema :: Ecto.Schema.t(),
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+      @impl SwissSchema
       def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -204,11 +255,7 @@ defmodule SwissSchema do
         |> unquote(repo).update(opts)
       end
 
-      @spec update!(
-              schema :: Ecto.Schema.t(),
-              params :: %{required(atom()) => term()},
-              opts :: Keyword.t()
-            ) :: Ecto.Schema.t()
+      @impl SwissSchema
       def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
@@ -217,10 +264,7 @@ defmodule SwissSchema do
         |> unquote(repo).update!(opts)
       end
 
-      @spec update_all(
-              updates :: Keyword.t(),
-              opts :: Keyword.t()
-            ) :: {non_neg_integer(), nil | [term()]}
+      @impl SwissSchema
       def update_all(updates, opts \\ []) do
         unquote(repo).update_all(__MODULE__, updates, opts)
       end
