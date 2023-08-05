@@ -1,10 +1,6 @@
 defmodule SwissSchema do
   @moduledoc """
-  `SwissSchema` is a query toolkit for Ecto schemas. It makes it easy to manipulate
-  data using Ecto schemas by implementing relevant Ecto.Repo
-  [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and
-  [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions,
-  pre-configured to work specifically with the given Ecto schema.
+  `SwissSchema` is a query toolkit for Ecto schemas. It makes it easy to manipulate data using Ecto schemas by implementing relevant Ecto.Repo [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions, pre-configured to work specifically with the given Ecto schema.
 
   ## Setup
 

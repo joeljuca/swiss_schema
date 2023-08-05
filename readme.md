@@ -4,11 +4,7 @@
 
 **A Swiss Army knife for your Ecto schemas**
 
-SwissSchema is a query toolkit for Ecto schemas. It makes it easy to manipulate
-data using Ecto schemas by implementing relevant Ecto.Repo
-[Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and
-[Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions,
-pre-configured to work specifically with the given Ecto schema.
+SwissSchema is a query toolkit for Ecto schemas. It makes it easy to manipulate data using Ecto schemas by implementing relevant Ecto.Repo [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api) functions, pre-configured to work specifically with the given Ecto schema.
 
 ## Setup
 
@@ -38,10 +34,7 @@ That's it, you should be good to go.
 
 ## Usage
 
-When you `use SwissSchema`, a collection of pre-configured functions will be
-added to your Ecto schema module. The functions are equivalent to two important
-Ecto.Repo APIs: the [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api)
-and the [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api).
+When you `use SwissSchema`, a collection of pre-configured functions will be added to your Ecto schema module. The functions are equivalent to two important Ecto.Repo APIs: the [Query API](https://hexdocs.pm/ecto/Ecto.Repo.html#query-api) and the [Schema API](https://hexdocs.pm/ecto/Ecto.Repo.html#schema-api).
 
 ```elixir
 iex> User.get(1)
@@ -51,8 +44,7 @@ iex> User.get_by(email: "john@smiths.net")
 {:ok, %User{id: 2, email: "john@smiths.net", ...}}
 ```
 
-The motivation to have such API directly in your Ecto schema is to make function
-calls more idiomatic.
+The motivation to have such API directly in your Ecto schema is to make function calls more idiomatic.
 
 [Check the docs](https://hexdocs.pm/swiss_schema) for a complete list of available functions.
 
