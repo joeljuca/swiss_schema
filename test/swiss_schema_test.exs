@@ -1,6 +1,5 @@
 defmodule SwissSchemaTest do
   use ExUnit.Case
-  doctest SwissSchema
   alias SwissSchemaTest.Repo
   alias SwissSchemaTest.User
 
