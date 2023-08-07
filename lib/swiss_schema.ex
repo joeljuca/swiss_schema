@@ -172,6 +172,19 @@ defmodule SwissSchema do
   @doc group: "Query API"
   @callback delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
 
+  @doc """
+  Fetches an entry by the primary key from the data store.
+
+  Returns `nil` if no entry was found. If the schema has no or more than one
+  primary key, it will raise an argument error.
+
+  ## Example
+
+      User.get(42)
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback get(
               id :: term(),
               opts :: Keyword.t()
