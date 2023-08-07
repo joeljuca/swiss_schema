@@ -61,6 +61,17 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: term() | nil
 
+  @doc """
+  Fetches all entries from the respective data store.
+
+  ## Example
+
+      # Fetch all users
+      User.all()
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
 
   @callback create(
