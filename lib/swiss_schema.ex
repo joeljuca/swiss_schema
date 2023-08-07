@@ -109,6 +109,38 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
 
+  @doc """
+  Deletes a struct using its primary key.
+
+  If the struct has no primary key, `Ecto.NoPrimaryKeyFieldError`
+  will be raised. If the struct has been removed prior to the call,
+  `Ecto.StaleEntryError` will be raised. If more than one database
+  operation is required, they're automatically wrapped in a transaction.
+
+  It returns `{:ok, struct}` if the struct has been successfully
+  deleted or `{:error, changeset}` if there was a validation
+  or a known constraint error.
+
+  ## Options
+
+    * `:stale_error_field` - The field where stale errors will be added in
+      the returning changeset. This option can be used to avoid raising
+      `Ecto.StaleEntryError`.
+
+    * `:stale_error_message` - The message to add to the configured
+      `:stale_error_field` when stale errors happen, defaults to "is stale".
+
+  ## Example
+
+      user = User.get!(42)
+      case User.delete post do
+        {:ok, struct}       -> # Deleted with success
+        {:error, changeset} -> # Something went wrong
+      end
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Schema API"
   @callback delete(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
