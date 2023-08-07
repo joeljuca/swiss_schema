@@ -205,6 +205,18 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: Ecto.Schema.t() | term()
 
+  @doc """
+  Fetches a single entry from the data store.
+
+  Returns `nil` if no result was found. Raises if more than one entry.
+
+  ## Example
+
+      User.get_by(email: "john@smiths.net")
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback get_by(
               clauses :: Keyword.t() | map(),
               opts :: Keyword.t()
