@@ -397,6 +397,10 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
+  @doc """
+  Same as `c:insert/2` but returns the struct or raises if the changeset is invalid.
+  """
+  @doc group: "Schema API"
   @callback insert!(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
