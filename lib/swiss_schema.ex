@@ -155,6 +155,21 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
 
+  @doc """
+  Deletes all entries.
+
+  It returns a tuple containing the number of entries and any returned
+  result as second element. The second element is `nil` by default
+  unless a `select` is supplied. Note, however, not all databases support
+  returning data from DELETEs.
+
+  ## Examples
+
+      User.delete_all()
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
 
   @callback get(
