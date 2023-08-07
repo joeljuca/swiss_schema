@@ -190,6 +190,16 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
 
+  @doc """
+  Similar to `c:get/2` but raises `Ecto.NoResultsError` if no entry was found.
+
+  ## Example
+
+      User.get!(42)
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback get!(
               id :: term(),
               opts :: Keyword.t()
