@@ -222,6 +222,18 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
 
+  @doc """
+  Similar to `c:get_by/2` but raises `Ecto.NoResultsError` if no entry was found.
+
+  Raises if more than one entry.
+
+  ## Example
+
+      User.get_by!(title: "john@smiths.net")
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback get_by!(
               clauses :: Keyword.t() | map(),
               opts :: Keyword.t()
