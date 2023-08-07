@@ -50,6 +50,17 @@ defmodule SwissSchema do
   > So, the module `MyApp.Accounts.User` itself will be referred to just as `User`.
   """
 
+  @doc """
+  Calculate the given aggregation.
+
+  ## Examples
+
+      # Returns the number of users
+      User.aggregate(:count)
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback aggregate(
               type :: :count,
               opts :: Keyword.t()
