@@ -146,6 +146,10 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
+  @doc """
+  Same as `c:delete/2` but returns the struct or raises if the changeset is invalid.
+  """
+  @doc group: "Schema API"
   @callback delete!(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
