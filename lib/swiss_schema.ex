@@ -99,6 +99,23 @@ defmodule SwissSchema do
   @doc group: "Query API"
   @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
 
+  @doc """
+  Creates a new struct.
+
+  `c:create/2` accepts a key-values map, validates it against the schema
+  changeset, and inserts into the repository if the validation succeeds.
+
+  ## Examples
+
+      # Returns an :ok tuple with valid params
+      {:ok, user} = User.create(%{name: "John S.", email: "john@smiths.net"})
+
+      # Returns an :error tuple with invalid params
+      {:error, %Ecto.Changeset{...}} = User.create(%{name: 123, email: "john"})
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Custom API"
   @callback create(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
