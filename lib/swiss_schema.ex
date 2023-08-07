@@ -121,6 +121,10 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
+  @doc """
+  Same as `c:create/2` but returns the struct or raises if params is invalid.
+  """
+  @doc group: "Custom API"
   @callback create!(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
