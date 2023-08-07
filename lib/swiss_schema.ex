@@ -66,6 +66,20 @@ defmodule SwissSchema do
               opts :: Keyword.t()
             ) :: term() | nil
 
+  @doc """
+  Calculate the given `aggregate` over the given `field`.
+
+  ## Examples
+
+      # Returns the sum of the number of visits for every user
+      User.aggregate(:sum, :visits)
+
+      # Returns the average number of user visits
+      User.aggregate(:avg, :visits)
+
+  See the ["Usage"](#module-usage) section for context info.
+  """
+  @doc group: "Query API"
   @callback aggregate(
               type :: :avg | :count | :max | :min | :sum,
               field :: atom(),
