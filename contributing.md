@@ -2,6 +2,12 @@
 
 This document gathers information about how to maintain and contribute to SwissSchema.
 
+## Commits How-To
+
+- Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org)
+- Updates to deps list must be isolated
+- Every commit must pass all build steps (style, analysis, test, etc.)
+
 ## Release How-To
 
 To release a new version, follow the steps below.
