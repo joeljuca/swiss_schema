@@ -15,5 +15,8 @@ lint:
 fmt:
 	mix format
 
+analyze:
+	mix dialyzer
+
 test:
 	mix test
