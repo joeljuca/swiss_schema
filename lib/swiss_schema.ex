@@ -156,16 +156,18 @@ defmodule SwissSchema do
       @behaviour SwissSchema
 
       @impl SwissSchema
-      def aggregate(:count) do
-        unquote(repo).aggregate(__MODULE__, :count)
-      end
+      def aggregate(type, opts \\ [])
 
-      def aggregate(:count, opts) do
+      def aggregate(:count, opts) when is_list(opts) do
         unquote(repo).aggregate(__MODULE__, :count, opts)
       end
 
+      def aggregate(type, field) when is_atom(field) do
+        aggregate(type, field, [])
+      end
+
       @impl SwissSchema
-      def aggregate(type, field, opts \\ []) do
+      def aggregate(type, field, opts) do
         unquote(repo).aggregate(__MODULE__, type, field, opts)
       end
 
