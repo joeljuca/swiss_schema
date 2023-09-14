@@ -57,8 +57,8 @@ defmodule SwissSchema.MixProject do
     [
       main: "SwissSchema",
       groups_for_functions: [
-        group_for_function("Query API"),
-        group_for_function("Schema API")
+        group_for_function("Ecto.Repo Query API"),
+        group_for_function("Ecto.Repo Schema API")
       ]
     ]
   end

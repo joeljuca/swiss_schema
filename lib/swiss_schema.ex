@@ -60,7 +60,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback aggregate(
               type :: :count,
               opts :: Keyword.t()
@@ -79,7 +79,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback aggregate(
               type :: :avg | :count | :max | :min | :sum,
               field :: atom(),
@@ -96,7 +96,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
 
   @doc """
@@ -115,7 +115,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Custom API"
+  # @doc group: "SwissSchema API"
   @callback create(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
@@ -124,7 +124,7 @@ defmodule SwissSchema do
   @doc """
   Same as `c:create/2` but returns the struct or raises if params is invalid.
   """
-  @doc group: "Custom API"
+  # @doc group: "SwissSchema API"
   @callback create!(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
@@ -161,7 +161,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Schema API"
+  @doc group: "Ecto.Repo Schema API"
   @callback delete(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
@@ -170,7 +170,7 @@ defmodule SwissSchema do
   @doc """
   Same as `c:delete/2` but returns the struct or raises if the changeset is invalid.
   """
-  @doc group: "Schema API"
+  @doc group: "Ecto.Repo Schema API"
   @callback delete!(
               schema :: Ecto.Schema.t(),
               opts :: Keyword.t()
@@ -190,7 +190,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
 
   @doc """
@@ -205,7 +205,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback get(
               id :: term(),
               opts :: Keyword.t()
@@ -220,7 +220,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback get!(
               id :: term(),
               opts :: Keyword.t()
@@ -237,7 +237,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback get_by(
               clauses :: Keyword.t() | map(),
               opts :: Keyword.t()
@@ -254,7 +254,7 @@ defmodule SwissSchema do
 
   See the ["Usage"](#module-usage) section for context info.
   """
-  @doc group: "Query API"
+  @doc group: "Ecto.Repo Query API"
   @callback get_by!(
               clauses :: Keyword.t() | map(),
               opts :: Keyword.t()
@@ -412,7 +412,7 @@ defmodule SwissSchema do
   time is not recommended, as Ecto will be unable to actually track the proper
   status of the association.
   """
-  @doc group: "Schema API"
+  @doc group: "Ecto.Repo Schema API"
   @callback insert(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
@@ -421,7 +421,7 @@ defmodule SwissSchema do
   @doc """
   Same as `c:insert/2` but returns the struct or raises if the changeset is invalid.
   """
-  @doc group: "Schema API"
+  @doc group: "Ecto.Repo Schema API"
   @callback insert!(
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
