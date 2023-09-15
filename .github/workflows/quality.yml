@@ -1,10 +1,10 @@
-name: ci
+name: quality
 
 on:
   push:
 
 jobs:
-  lint:
+  style:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,6 +33,7 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
 
+      - run: mix do deps.get + deps.compile + compile
       - run: mix dialyzer
 
   test:

@@ -1,6 +1,6 @@
 # SwissSchema
 
-![swiss_schema](https://github.com/joeljuca/swiss_schema/actions/workflows/ci.yml/badge.svg)
+![Quality status](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml/badge.svg)
 
 **A Swiss Army knife for your Ecto schemas**
 
