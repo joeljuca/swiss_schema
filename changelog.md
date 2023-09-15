@@ -2,6 +2,16 @@
 
 This document lists important changes between SwissSchema versions, in descending order.
 
+## v0.4.1
+
+### Bug fixes
+
+- fix: warning on missing callback `aggregate/1` (`e7ec963`)
+
+### Docs
+
+- docs: add a contributing.md (`a75fb49`, `6b91439`, `c047b6c`)
+
 ## v0.4.0
 
 ### Features and improvements
