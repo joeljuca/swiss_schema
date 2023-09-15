@@ -49,5 +49,5 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
 
-      - run: mix do deps.get + deps.compile + compile
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
       - run: mix test
