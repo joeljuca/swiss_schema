@@ -1,5 +1,7 @@
 # SwissSchema
 
+![Licensed under Apache 2.0](https://img.shields.io/hexpm/l/swiss_schema)
+![Hex version](https://img.shields.io/hexpm/v/swiss_schema)
 ![Quality status](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml/badge.svg)
 
 **A Swiss Army knife for your Ecto schemas**
