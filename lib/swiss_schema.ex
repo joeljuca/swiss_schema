@@ -154,6 +154,7 @@ defmodule SwissSchema do
 
     quote do
       @behaviour SwissSchema
+      @read_only? {:insert, 1} not in unquote(repo).__info__(:functions)
 
       @impl SwissSchema
       def aggregate(type, opts \\ [])
@@ -176,37 +177,39 @@ defmodule SwissSchema do
         unquote(repo).all(__MODULE__, opts)
       end
 
-      @impl SwissSchema
-      def create(%{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+      if not @read_only? do
+        @impl SwissSchema
+        def create(%{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> unquote(repo).insert(opts)
-      end
+          struct(__MODULE__)
+          |> changeset.(params)
+          |> unquote(repo).insert(opts)
+        end
 
-      @impl SwissSchema
-      def create!(%{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        @impl SwissSchema
+        def create!(%{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> unquote(repo).insert!(opts)
-      end
+          struct(__MODULE__)
+          |> changeset.(params)
+          |> unquote(repo).insert!(opts)
+        end
 
-      @impl SwissSchema
-      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).delete(schema, opts)
-      end
+        @impl SwissSchema
+        def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
+          unquote(repo).delete(schema, opts)
+        end
 
-      @impl SwissSchema
-      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        unquote(repo).delete!(schema, opts)
-      end
+        @impl SwissSchema
+        def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
+          unquote(repo).delete!(schema, opts)
+        end
 
-      @impl SwissSchema
-      def delete_all(opts \\ []) do
-        unquote(repo).delete_all(__MODULE__, opts)
+        @impl SwissSchema
+        def delete_all(opts \\ []) do
+          unquote(repo).delete_all(__MODULE__, opts)
+        end
       end
 
       @impl SwissSchema
@@ -235,37 +238,39 @@ defmodule SwissSchema do
         unquote(repo).get_by!(__MODULE__, clauses, opts)
       end
 
-      @impl SwissSchema
-      def insert(%{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+      if not @read_only? do
+        @impl SwissSchema
+        def insert(%{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> unquote(repo).insert(opts)
-      end
+          struct(__MODULE__)
+          |> changeset.(params)
+          |> unquote(repo).insert(opts)
+        end
 
-      @impl SwissSchema
-      def insert!(%{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        @impl SwissSchema
+        def insert!(%{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> unquote(repo).insert!(opts)
-      end
+          struct(__MODULE__)
+          |> changeset.(params)
+          |> unquote(repo).insert!(opts)
+        end
 
-      @impl SwissSchema
-      def insert_all(entries, opts \\ []) do
-        unquote(repo).insert_all(__MODULE__, entries, opts)
-      end
+        @impl SwissSchema
+        def insert_all(entries, opts \\ []) do
+          unquote(repo).insert_all(__MODULE__, entries, opts)
+        end
 
-      @impl SwissSchema
-      def insert_or_update(%Ecto.Changeset{} = changeset, opts \\ []) do
-        unquote(repo).insert_or_update(changeset, opts)
-      end
+        @impl SwissSchema
+        def insert_or_update(%Ecto.Changeset{} = changeset, opts \\ []) do
+          unquote(repo).insert_or_update(changeset, opts)
+        end
 
-      @impl SwissSchema
-      def insert_or_update!(%Ecto.Changeset{} = changeset, opts \\ []) do
-        unquote(repo).insert_or_update!(changeset, opts)
+        @impl SwissSchema
+        def insert_or_update!(%Ecto.Changeset{} = changeset, opts \\ []) do
+          unquote(repo).insert_or_update!(changeset, opts)
+        end
       end
 
       @impl SwissSchema
@@ -273,27 +278,29 @@ defmodule SwissSchema do
         unquote(repo).stream(__MODULE__, opts)
       end
 
-      @impl SwissSchema
-      def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+      if not @read_only? do
+        @impl SwissSchema
+        def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        schema
-        |> changeset.(params)
-        |> unquote(repo).update(opts)
-      end
+          schema
+          |> changeset.(params)
+          |> unquote(repo).update(opts)
+        end
 
-      @impl SwissSchema
-      def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        @impl SwissSchema
+        def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+          changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        schema
-        |> changeset.(params)
-        |> unquote(repo).update!(opts)
-      end
+          schema
+          |> changeset.(params)
+          |> unquote(repo).update!(opts)
+        end
 
-      @impl SwissSchema
-      def update_all(updates, opts \\ []) do
-        unquote(repo).update_all(__MODULE__, updates, opts)
+        @impl SwissSchema
+        def update_all(updates, opts \\ []) do
+          unquote(repo).update_all(__MODULE__, updates, opts)
+        end
       end
     end
   end
