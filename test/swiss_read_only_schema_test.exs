@@ -1,7 +1,7 @@
 defmodule SwissReadOnlySchemaTest do
   use ExUnit.Case
   
-  describe "use SwissSchema" do
+  describe "use SwissSchema with read-only repo" do
     test "define aggregate/1" do
       assert function_exported?(SwissSchemaTest.ReadOnlyUser, :aggregate, 1)
     end
