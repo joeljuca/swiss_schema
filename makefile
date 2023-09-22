@@ -1,4 +1,4 @@
-.PHONY: setup build lint test
+.PHONY: setup build reset lint fmt analyze test
 
 setup:
 	make build
