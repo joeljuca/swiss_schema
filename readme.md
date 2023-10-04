@@ -60,6 +60,13 @@ SwissSchema allows you to start building your system without having to set conte
 
 Also, `User.get(1)` is just easier to read and understand than `Repo.get(User, 1)`. :)
 
+## Alternatives
+
+It seems that I'm not the only person in the world trying to improve this immediate Ecto's querying DX. Recently, I found some other projects similar to SwissSchema that creates some sort of querying tools out of Ecto schemas:
+
+- **[Bee](https://hex.pm/packages/bee)** by [Helder de Sousa](https://github.com/andridus) ([GitHub](https://github.com/andridus/bee)) 🇧🇷
+- **[EctoQuerify](https://hex.pm/packages/ecto_querify)** by [Marko Bogdanović](https://github.com/bmarkons) ([GitHub](https://github.com/bmarkons/ecto_querify)) 🇷🇸
+
 ## License
 
 [Apache License 2.0](license)
