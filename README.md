@@ -1,6 +1,6 @@
 # SwissSchema
 
-[![Licensed under Apache 2.0](https://img.shields.io/hexpm/l/swiss_schema)](license)
+[![Licensed under Apache 2.0](https://img.shields.io/hexpm/l/swiss_schema)](LICENSE)
 [![Hex version](https://img.shields.io/hexpm/v/swiss_schema)](https://hex.pm/packages/swiss_schema)
 [![Quality status](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml/badge.svg)](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml)
 
