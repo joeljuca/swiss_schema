@@ -50,16 +50,6 @@ The motivation to have such API directly in your Ecto schema is to make function
 
 [Check the docs](https://hexdocs.pm/swiss_schema) for a complete list of available functions.
 
-## Why?
-
-If you find yourself asking what is the motivation for the creation of this module, this paragraph is for you. So, Elixir and Phoenix have this organizational concept called contexts, which is similar to the [Facade pattern](https://en.wikipedia.org/wiki/Facade_pattern): context modules should expose APIs for inner functionality to other modules. The thing is: implementing context modules require some effort, a good understanding level of the domain, etc., so you can break it down into smaller contexts that talk to each other through established APIs.
-
-Well, it's not always that easy. Understanding your domain without diving into it is almost impossible, and you'll most probably acquire a better understanding of your domain and the system you're building after you start building it.
-
-SwissSchema allows you to start building your system without having to set context boundaries. You can just generate a Ecto schema, `use SwissSchema` in it, and start manipulating data right away. And when time comes for you to turn your operations into real transactions, you slice your system into contexts, implement context modules, and start replacing SwissSchema function calls with your context functions.
-
-Also, `User.get(1)` is just easier to read and understand than `Repo.get(User, 1)`. :)
-
 ## Alternatives
 
 It seems that I'm not the only person in the world trying to improve this immediate Ecto's querying DX. Recently, I found some other projects similar to SwissSchema that creates some sort of querying tools out of Ecto schemas:
