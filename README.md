@@ -59,4 +59,4 @@ It seems that I'm not the only person in the world trying to improve this immedi
 
 ## License
 
-[Apache License 2.0](license)
+[Apache License 2.0](LICENSE)
