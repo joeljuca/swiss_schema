@@ -50,6 +50,10 @@ The motivation to have such API directly in your Ecto schema is to make function
 
 [Check the docs](https://hexdocs.pm/swiss_schema) for a complete list of available functions.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## FAQ
 
 See: [FAQ.md](FAQ.md).

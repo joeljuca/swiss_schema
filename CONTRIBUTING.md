@@ -1,33 +1,12 @@
-# Contribution Guide
+# SwissSchema Contribution Guide
 
-This document gathers information about how to maintain and contribute to SwissSchema.
+This document documents information about how to maintain and contribute to SwissSchema.
 
-## Commits How-To
+## Contributing Checklist
 
-- Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org)
-- Updates to deps list must be isolated
-- Every commit must pass all build steps (style, analysis, test, etc.)
-
-## Release How-To
-
-To release a new version, follow the steps below.
-
-- Ensure code style, tests, and dialyzer are looking good
-  - `mix format --check-formatted`
-  - `mix test`
-  - `mix dialyzer`
-- Bump version
-  - Update version in `mix.exs`
-  - Update suggested version in `readme.md`
-  - Update suggested version in `lib/swiss_schema.ex`
-  - Update the Changelog with important changes
-  - `git commit -m 'chore: bump version to v1.2.3'`
-- Tag the version-bump commit
-  - Eg.: `git tag -a -s v1.2.3 -m v1.2.3`
-- Send version tag to GitHub
-  - `git push origin v1.2.3`
-- [Create a GitHub release](https://github.com/joeljuca/swiss_schema/releases/new) from version tag
-- Publish to Hex
-  - `mix hex.publish`
-
-> Note: the following steps use a fictional version `v1.2.3` to illustrate commands, but it should be replaced with the version to be released.
+- [ ] **Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org)**  
+       _It distinguishes commits types (fixes, features, rewrites, etc.) and is required for changelogs_
+- [ ] **Every commit must pass the quality workflow (style, analysis, test, etc.)**  
+       Commits must always change the codebase to a working state (aka.: no breaking commits)
+- [ ] **Updates to deps list must be isolated**  
+       _This is a security practice. Any change to the deps list (adding, removing items - even version adjusts), can introduce security issues, and these changes are manually reviewed. Isolating them into their own commits can facilitate code reviews._
