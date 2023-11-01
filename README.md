@@ -50,6 +50,10 @@ The motivation to have such API directly in your Ecto schema is to make function
 
 [Check the docs](https://hexdocs.pm/swiss_schema) for a complete list of available functions.
 
+## FAQ
+
+See: [FAQ.md](FAQ.md).
+
 ## Alternatives
 
 It seems that I'm not the only person in the world trying to improve this immediate Ecto's querying DX. Recently, I found some other projects similar to SwissSchema that creates some sort of querying tools out of Ecto schemas:
