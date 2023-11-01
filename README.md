@@ -59,6 +59,7 @@ See: [FAQ.md](FAQ.md).
 It seems that I'm not the only person in the world trying to improve this immediate Ecto's querying DX. Recently, I found some other projects similar to SwissSchema that creates some sort of querying tools out of Ecto schemas:
 
 - **[Bee](https://hex.pm/packages/bee)** by [Helder de Sousa](https://github.com/andridus) 🇧🇷
+- **[Ecto.Entity](https://hex.pm/packages/ecto_entity)** by [Kamaro Lambert](https://github.com/kamaroly) 🇰🇪
 - **[EctoQuerify](https://hex.pm/packages/ecto_querify)** by [Marko Bogdanović](https://github.com/bmarkons) 🇷🇸
 
 ## License
