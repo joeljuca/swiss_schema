@@ -55,7 +55,14 @@ defmodule SwissSchema.MixProject do
 
   defp docs do
     [
-      main: "SwissSchema"
+      main: "SwissSchema",
+      groups_for_functions: [
+        group_for_function("Ecto.Repo Query API"),
+        group_for_function("Ecto.Repo Schema API"),
+        group_for_function("SwissSchema API")
+      ]
     ]
   end
+
+  defp group_for_function(group), do: {String.to_atom(group), &(&1[:group] == group)}
 end
