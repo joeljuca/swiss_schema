@@ -68,4 +68,4 @@ It seems that I'm not the only person in the world trying to improve this immedi
 
 ## License
 
-[Apache License 2.0](LICENSE)
+&copy; 2023 Joel Jucá. Licensed under [Apache License 2.0](LICENSE)
