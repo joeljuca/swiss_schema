@@ -3,15 +3,31 @@ defmodule SwissSchemaTest do
   alias SwissSchemaTest.Repo
   alias SwissSchemaTest.User
 
-  @database_path Application.compile_env!(:swiss_schema, :sqlite_database_path)
+  @database_dir Application.compile_env!(:swiss_schema, :database_dir)
 
   setup_all do
-    File.rm(@database_path)
-    on_exit(fn -> File.rm(@database_path) end)
+    File.rm_rf!(@database_dir)
 
-    SwissSchemaTest.Repo.start_link(database: @database_path, log: false)
-    Ecto.Adapters.SQLite3.storage_up(database: @database_path)
-    Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
+    [
+      SwissSchemaTest.Repo,
+      SwissSchemaTest.Repo2
+    ]
+    |> Enum.each(fn repo ->
+      db_path =
+        "#{repo}"
+        |> String.split(".")
+        |> List.last()
+        |> String.downcase()
+        |> then(&"#{@database_dir}/#{&1}.db")
+
+      start_link = Function.capture(repo, :start_link, 1)
+      start_link.(database: db_path, log: false)
+
+      Ecto.Adapters.SQLite3.storage_up(database: db_path)
+      Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
+    end)
+
+    on_exit(fn -> File.rm_rf!(@database_dir) end)
 
     :ok
   end
