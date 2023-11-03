@@ -1,6 +1,7 @@
 defmodule SwissSchemaTest do
   use ExUnit.Case
   alias SwissSchemaTest.Repo
+  alias SwissSchemaTest.Repo2
   alias SwissSchemaTest.User
 
   @database_dir Application.compile_env!(:swiss_schema, :database_dir)
@@ -8,11 +9,7 @@ defmodule SwissSchemaTest do
   setup_all do
     File.rm_rf!(@database_dir)
 
-    [
-      SwissSchemaTest.Repo,
-      SwissSchemaTest.Repo2
-    ]
-    |> Enum.each(fn repo ->
+    Enum.each([Repo, Repo2], fn repo ->
       db_path =
         "#{repo}"
         |> String.split(".")
@@ -24,7 +21,7 @@ defmodule SwissSchemaTest do
       start_link.(database: db_path, log: false)
 
       Ecto.Adapters.SQLite3.storage_up(database: db_path)
-      Ecto.Migrator.up(Repo, 1, SwissSchemaTest.CreateUsers, log: false)
+      Ecto.Migrator.up(repo, 1, SwissSchemaTest.CreateUsers, log: false)
     end)
 
     on_exit(fn -> File.rm_rf!(@database_dir) end)
@@ -32,15 +29,22 @@ defmodule SwissSchemaTest do
     :ok
   end
 
-  setup do: on_exit(fn -> Repo.delete_all(User) end)
+  setup do
+    on_exit(fn ->
+      Repo.delete_all(User)
+      Repo2.delete_all(User)
+    end)
+  end
 
-  defp user_mock do
-    username = "user-#{Ecto.UUID.generate()}"
+  defp user_mock(opts \\ []) when is_list(opts) do
+    username = Keyword.get(opts, :username, "user-#{Ecto.UUID.generate()}")
+    email = Keyword.get(opts, :email, "#{username}@localhost")
+    lucky_number = Keyword.get(opts, :lucky_number, Enum.random(1..1_000_000))
 
     %User{
       username: username,
-      email: username <> "@localhost",
-      lucky_number: Enum.random(1..1_000_000)
+      email: email,
+      lucky_number: lucky_number
     }
   end
 
@@ -219,18 +223,17 @@ defmodule SwissSchemaTest do
 
       assert User.aggregate(:count) == 1
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      1..5 |> Enum.each(fn _ -> user_mock() |> Repo2.insert() end)
+
+      assert 5 = User.aggregate(:count, repo: Repo2)
+    end
   end
 
   describe "aggregate/3" do
     setup do
-      [1, 2, 3, 4, 5]
-      |> Enum.each(fn number ->
-        Repo.insert(%User{
-          username: Ecto.UUID.generate(),
-          email: "#{Ecto.UUID.generate()}@localhost",
-          lucky_number: number
-        })
-      end)
+      1..5 |> Enum.each(fn i -> user_mock(lucky_number: i) |> Repo.insert() end)
     end
 
     test "aggregate(:avg, :field, _) process the :field average" do
@@ -252,6 +255,21 @@ defmodule SwissSchemaTest do
     test "aggregate(:sum, :field, _) process the :field sum" do
       assert User.aggregate(:sum, :lucky_number) == 15
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      1..5 |> Enum.map(fn i -> Repo2.insert(user_mock(lucky_number: i)) end)
+
+      [
+        {:avg, 3.0},
+        {:count, 5},
+        {:max, 5},
+        {:min, 1},
+        {:sum, 15}
+      ]
+      |> Enum.each(fn {type, val} ->
+        assert ^val = User.aggregate(type, :lucky_number, repo: Repo2)
+      end)
+    end
   end
 
   describe "all/1" do
@@ -261,6 +279,12 @@ defmodule SwissSchemaTest do
       user_mock() |> Repo.insert()
 
       assert [%User{}] = User.all()
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      1..3 |> Enum.map(fn _ -> Repo2.insert(user_mock()) end)
+
+      assert [%User{}, %User{}, %User{}] = User.all(repo: Repo2)
     end
   end
 
@@ -279,6 +303,13 @@ defmodule SwissSchemaTest do
     test "creates a new row" do
       assert {:ok, %User{}} = User.create(%{username: "root", email: "root@localhost"})
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      {:ok, user} = user_mock() |> Map.from_struct() |> User.create(repo: Repo2)
+
+      assert %User{} = user
+      assert ^user = Repo2.get(User, user.id)
+    end
   end
 
   describe "create!/2" do
@@ -296,6 +327,13 @@ defmodule SwissSchemaTest do
     test "creates a new row" do
       assert %User{} = User.create!(%{username: "root", email: "root@localhost"})
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = user_mock() |> Map.from_struct() |> User.create!(repo: Repo2)
+
+      assert %User{} = user
+      assert ^user = Repo2.get!(User, user.id)
+    end
   end
 
   describe "delete/2" do
@@ -305,6 +343,13 @@ defmodule SwissSchemaTest do
       assert {:ok, %User{}} = User.delete(user)
 
       assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = Repo2.insert!(user_mock())
+
+      assert {:ok, %User{}} = User.delete(user, repo: Repo2)
+      assert_raise Ecto.NoResultsError, fn -> Repo2.get!(User, user.id) end
     end
   end
 
@@ -316,6 +361,13 @@ defmodule SwissSchemaTest do
 
       assert_raise Ecto.NoResultsError, fn -> Repo.get!(User, user.id) end
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = Repo2.insert!(user_mock())
+
+      assert %User{} = User.delete!(user, repo: Repo2)
+      assert_raise Ecto.NoResultsError, fn -> Repo2.get!(User, user.id) end
+    end
   end
 
   describe "delete_all/1" do
@@ -325,6 +377,14 @@ defmodule SwissSchemaTest do
       user_mock() |> Repo.insert()
 
       assert {1, _} = User.delete_all()
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      assert {0, _} = User.delete_all(repo: Repo2)
+
+      user_mock() |> Repo2.insert!()
+
+      assert {1, _} = User.delete_all(repo: Repo2)
     end
   end
 
@@ -338,6 +398,12 @@ defmodule SwissSchemaTest do
 
       assert {:ok, %User{id: ^id}} = User.get(id)
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      %{id: uid} = user_mock() |> Repo2.insert!()
+
+      assert {:ok, %User{id: ^uid}} = User.get(uid, repo: Repo2)
+    end
   end
 
   describe "get!/2" do
@@ -349,6 +415,12 @@ defmodule SwissSchemaTest do
       %{id: id} = user_mock() |> Repo.insert!()
 
       assert %User{id: ^id} = User.get!(id)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      %{id: uid} = user_mock() |> Repo2.insert!()
+
+      assert %User{id: ^uid} = User.get!(uid, repo: Repo2)
     end
   end
 
@@ -362,6 +434,12 @@ defmodule SwissSchemaTest do
 
       assert {:ok, %User{username: "root"}} = User.get_by(username: "root")
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      %{username: username} = user_mock() |> Repo2.insert!()
+
+      assert {:ok, %User{username: ^username}} = User.get_by([username: username], repo: Repo2)
+    end
   end
 
   describe "get_by!/2" do
@@ -374,6 +452,12 @@ defmodule SwissSchemaTest do
 
       assert %User{username: "root"} = User.get_by!(username: "root")
     end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      %{username: username} = user_mock() |> Repo2.insert!()
+
+      assert %User{username: ^username} = User.get_by!([username: username], repo: Repo2)
+    end
   end
 
   describe "insert/2" do
@@ -382,6 +466,13 @@ defmodule SwissSchemaTest do
 
       assert {:ok, %User{} = user} = User.insert(user)
       assert ^user = Repo.get!(User, user.id)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      params = user_mock() |> Map.from_struct()
+
+      assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
+      assert %User{} = Repo2.get!(User, uid)
     end
   end
 
@@ -396,6 +487,22 @@ defmodule SwissSchemaTest do
 
       Enum.each(Repo.all(User), fn user ->
         assert Enum.any?(params_list, fn params -> user.email == params.email end)
+      end)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      params_list =
+        [
+          user_mock() |> Map.from_struct(),
+          user_mock() |> Map.from_struct(),
+          user_mock() |> Map.from_struct()
+        ]
+        |> Enum.map(&Map.drop(&1, [:__meta__]))
+
+      assert {3, _} = User.insert_all(params_list, repo: Repo2)
+
+      Enum.each(params_list, fn %{username: username} ->
+        assert %User{} = User.get_by!([username: username], repo: Repo2)
       end)
     end
   end
@@ -419,6 +526,23 @@ defmodule SwissSchemaTest do
       assert {5, _} = User.update_all(inc: [lucky_number: 3])
 
       assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      [
+        user_mock() |> Map.from_struct(),
+        user_mock() |> Map.from_struct(),
+        user_mock() |> Map.from_struct()
+      ]
+      |> Enum.map(&Map.drop(&1, [:__meta__]))
+      |> User.insert_all(repo: Repo2)
+
+      assert {3, _} = User.update_all([set: [is_active: false]], repo: Repo2)
+
+      User.all(repo: Repo2)
+      |> Enum.each(fn user ->
+        assert %{is_active: false} = user
+      end)
     end
   end
 end
