@@ -2,6 +2,20 @@
 
 This document lists important changes between SwissSchema versions, in descending order.
 
+## v0.5.0
+
+### Features and improvements
+
+- feat: accept custom Ecto repos thru a `:repo` opt (`97c19b7`)
+
+### Docs
+
+- docs: add a [PLAYBOOK.md](PLAYBOOK.md) (`2b58a17`)
+- docs: add a [FAQ.md](FAQ.md) (`ea03e14`)
+- docs: rewrite the [CONTRIBUTING.md](CONTRIBUTING.md) (`8371cec`)
+
+Plus some other minor overall improvements to documentation.
+
 ## v0.4.1
 
 ### Bug fixes
