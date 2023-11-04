@@ -19,3 +19,7 @@ SwissSchema tries to be a one-stop-shop for this type of issues.
 The functions that Phoenix generates when you use `mix phx.gen.schema` to generate code is also more code for you to maintain yourself. I don't think it's wise to maintain such basic functions (eg: tests, docs, etc.) in each project we build. It just doesn't make sense.
 
 Also, I think that context modules should not contain CRUD code. Context modules are supposed to be the entry point for inner functionality (aka: a [Facade](https://en.wikipedia.org/wiki/Facade_pattern)). So, moving these CRUD functions to a shared FOSS project allows context modules to focus on what they're supposed to do.
+
+## Why licensing it under Apache License 2.0?
+
+It's the same license used by [Elixir](https://elixir-lang.org).
