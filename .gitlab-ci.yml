@@ -1,0 +1,44 @@
+stages:
+  - style
+  - analysis
+  - test
+
+variables:
+  OTP_VERSION: "27"
+  ELIXIR_VERSION: "1.17"
+
+cache:
+  paths:
+    - deps/
+
+style:
+  stage: style
+  image: elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-alpine
+  script:
+    - mix local.hex --force
+    - mix local.rebar --force
+    - mix do deps.get, deps.compile, compile
+    - mix format --check-formatted
+
+analysis:
+  stage: analysis
+  image: elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-alpine
+  script:
+    - mix local.hex --force
+    - mix local.rebar --force
+    - mix do deps.get, deps.compile, compile
+    - mix dialyzer
+
+test:
+  stage: test
+  image: elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-alpine
+  services:
+    - name: postgres:16.1-alpine3.19
+      alias: postgres
+  variables:
+    POSTGRES_PASSWORD: postgres
+  script:
+    - mix local.hex --force
+    - mix local.rebar --force
+    - MIX_ENV=test mix do deps.get, deps.compile, compile
+    - mix test
