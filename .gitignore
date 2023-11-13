@@ -33,3 +33,6 @@ swiss_schema-*.tar
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+# asdf. https://asdf-vm.com
+.tool-versions
