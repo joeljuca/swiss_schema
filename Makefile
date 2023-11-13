@@ -23,3 +23,9 @@ test:
 
 test.watch:
 	find -E lib test -regex .*exs?$ | entr -c mix test
+
+docs:
+	mix docs
+
+docs.watch:
+	find -E . -regex .*exs?$ | grep -Ev "(\.elixir_ls|\.git|_build|deps|test)" | entr -c mix docs
