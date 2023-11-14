@@ -15,7 +15,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          key: deps_${{ runner.os }}_${{ hashFiles('mix.lock') }}
 
       - run: mix do deps.get + deps.compile + compile
       - run: mix format --check-formatted
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          key: deps_${{ runner.os }}_${{ hashFiles('mix.lock') }}
 
       - run: mix do deps.get + deps.compile + compile
       - run: mix dialyzer
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
+          key: deps_${{ runner.os }}_${{ hashFiles('mix.lock') }}
 
       - run: MIX_ENV=test mix do deps.get + deps.compile + compile
       - run: mix test
