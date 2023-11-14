@@ -1,0 +1,89 @@
+name: legacy
+
+on:
+  push:
+
+jobs:
+  v1dot15:
+    runs-on: ubuntu-20.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["24", "25"]
+        elixir: ["1.15"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
+
+  v1dot14:
+    runs-on: ubuntu-20.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["23", "24", "25"]
+        elixir: ["1.14"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
+
+  test_v1dot13:
+    runs-on: ubuntu-20.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["22", "23", "24", "25"]
+        elixir: ["1.13"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
+
+  test_v1dot12:
+    runs-on: ubuntu-20.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["22", "23", "24"]
+        elixir: ["1.12"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
