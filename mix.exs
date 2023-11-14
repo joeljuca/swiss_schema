@@ -7,7 +7,7 @@ defmodule SwissSchema.MixProject do
   def project do
     [
       app: :swiss_schema,
-      elixir: "~> 1.14",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
