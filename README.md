@@ -30,6 +30,10 @@ Then, `use SwissSchema` in your Ecto schemas:
 defmodule MyApp.Accounts.User do
   use Ecto.Schema
   use SwissSchema, repo: MyApp.Repo
+
+  def changeset(%User{} = user, params) do
+    # here you set up your schema's changeset as usual
+  end
 end
 ```
 
