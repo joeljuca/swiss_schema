@@ -554,17 +554,33 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def insert(%__MODULE__{} = schema, opts \\ []) do
+      def insert(source, opts \\ [])
+
+      def insert(%__MODULE__{} = schema, opts) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(r, :insert, 2)
         insert.(schema, opts)
       end
 
+      def insert(%Ecto.Changeset{data: %__MODULE__{}} = changeset, opts) do
+        r = Keyword.get(opts, :repo, unquote(repo))
+        insert = Function.capture(r, :insert, 2)
+        insert.(changeset, opts)
+      end
+
       @impl SwissSchema
-      def insert!(%__MODULE__{} = schema, opts \\ []) do
+      def insert!(source, opts \\ [])
+
+      def insert!(%__MODULE__{} = schema, opts) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(r, :insert!, 2)
         insert!.(schema, opts)
+      end
+
+      def insert!(%Ecto.Changeset{data: %__MODULE__{}} = changeset, opts) do
+        r = Keyword.get(opts, :repo, unquote(repo))
+        insert! = Function.capture(r, :insert!, 2)
+        insert!.(changeset, opts)
       end
 
       @impl SwissSchema
