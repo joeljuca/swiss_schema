@@ -554,25 +554,17 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def insert(%{} = params, opts \\ []) do
+      def insert(%__MODULE__{} = schema, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(r, :insert, 2)
-        changeset = Keyword.get(opts, :changeset, @default_changeset)
-
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert.(opts)
+        insert.(schema, opts)
       end
 
       @impl SwissSchema
-      def insert!(%{} = params, opts \\ []) do
+      def insert!(%__MODULE__{} = schema, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(r, :insert!, 2)
-        changeset = Keyword.get(opts, :changeset, @default_changeset)
-
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert!.(opts)
+        insert!.(schema, opts)
       end
 
       @impl SwissSchema

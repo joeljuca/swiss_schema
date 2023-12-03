@@ -2,7 +2,6 @@ defmodule SwissSchemaTest.User do
   @moduledoc false
 
   use Ecto.Schema
-  use SwissSchema, repo: SwissSchemaTest.Repo
   import Ecto.Changeset
 
   schema "users" do
@@ -11,6 +10,8 @@ defmodule SwissSchemaTest.User do
     field(:email, :string)
     field(:lucky_number, :integer)
   end
+
+  use SwissSchema, repo: SwissSchemaTest.Repo
 
   @impl true
   def changeset(%SwissSchemaTest.User{} = user, %{} = params) do

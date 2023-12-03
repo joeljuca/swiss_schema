@@ -461,24 +461,17 @@ defmodule SwissSchemaTest do
 
   describe "insert/2" do
     test "inserts a row" do
-      user = user_mock() |> Map.from_struct()
-
-      assert {:ok, %User{} = user} = User.insert(user)
+      assert {:ok, %User{} = user} = User.insert(user_mock())
       assert ^user = Repo.get!(User, user.id)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      params = user_mock() |> Map.from_struct()
-
-      assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
+      assert {:ok, %User{id: uid}} = User.insert(user_mock(), repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
     end
 
     test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
-      {:ok, user} =
-        user_mock()
-        |> Map.from_struct()
-        |> User.insert(changeset: &User.custom_changeset/2)
+      {:ok, user} = User.insert(user_mock(), changeset: &User.custom_changeset/2)
 
       assert %User{} = user
       assert is_integer(user.lucky_number)
@@ -487,24 +480,17 @@ defmodule SwissSchemaTest do
 
   describe "insert!/2" do
     test "inserts a row" do
-      user = user_mock() |> Map.from_struct()
-
-      assert %User{} = user = User.insert!(user)
+      assert %User{} = user = User.insert!(user_mock())
       assert ^user = Repo.get!(User, user.id)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      params = user_mock() |> Map.from_struct()
-
-      assert %User{id: uid} = User.insert!(params, repo: Repo2)
+      assert %User{id: uid} = User.insert!(user_mock(), repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
     end
 
     test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
-      user =
-        user_mock()
-        |> Map.from_struct()
-        |> User.insert!(changeset: &User.custom_changeset/2)
+      user = User.insert!(user_mock(), changeset: &User.custom_changeset/2)
 
       assert %User{} = user
       assert is_integer(user.lucky_number)
@@ -544,7 +530,7 @@ defmodule SwissSchemaTest do
 
   describe "update/2" do
     setup do
-      params = Map.from_struct(user_mock())
+      params = user_mock()
       [user: User.insert!(params)]
     end
 
@@ -556,8 +542,8 @@ defmodule SwissSchemaTest do
       assert {:ok, %User{}} = User.update(user, @update_params)
     end
 
-    test "accepts a custom Ecto repo thru :repo opt", %{user: user} do
-      user = User.insert!(Map.from_struct(user), repo: Repo2)
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = User.insert!(user_mock(), repo: Repo2)
       {:ok, user} = User.update(user, @update_params, repo: Repo2)
 
       assert %User{id: uid} = user
@@ -574,7 +560,7 @@ defmodule SwissSchemaTest do
 
   describe "update!/2" do
     setup do
-      params = Map.from_struct(user_mock())
+      params = user_mock()
       [user: User.insert!(params)]
     end
 
@@ -586,8 +572,8 @@ defmodule SwissSchemaTest do
       assert %User{} = User.update!(user, @update_params)
     end
 
-    test "accepts a custom Ecto repo thru :repo opt", %{user: user} do
-      user = User.insert!(Map.from_struct(user), repo: Repo2)
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = User.insert!(user_mock(), repo: Repo2)
       user = User.update!(user, @update_params, repo: Repo2)
 
       assert %User{id: uid} = user
