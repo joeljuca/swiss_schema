@@ -293,6 +293,16 @@ defmodule SwissSchemaTest do
       assert %User{} = user
       assert ^user = Repo2.get(User, user.id)
     end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
+      {:ok, user} =
+        user_mock()
+        |> Map.from_struct()
+        |> User.create(changeset: &User.custom_changeset/2)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
+    end
   end
 
   describe "create!/2" do
@@ -316,6 +326,16 @@ defmodule SwissSchemaTest do
 
       assert %User{} = user
       assert ^user = Repo2.get!(User, user.id)
+    end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
+      user =
+        user_mock()
+        |> Map.from_struct()
+        |> User.create!(changeset: &User.custom_changeset/2)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
     end
   end
 
@@ -452,6 +472,42 @@ defmodule SwissSchemaTest do
 
       assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
+      {:ok, user} =
+        user_mock()
+        |> Map.from_struct()
+        |> User.insert(changeset: &User.custom_changeset/2)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
+    end
+  end
+
+  describe "insert!/2" do
+    test "inserts a row" do
+      user = user_mock() |> Map.from_struct()
+
+      assert %User{} = user = User.insert!(user)
+      assert ^user = Repo.get!(User, user.id)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      params = user_mock() |> Map.from_struct()
+
+      assert %User{id: uid} = User.insert!(params, repo: Repo2)
+      assert %User{} = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt" do
+      user =
+        user_mock()
+        |> Map.from_struct()
+        |> User.insert!(changeset: &User.custom_changeset/2)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
     end
   end
 
