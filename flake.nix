@@ -20,10 +20,12 @@
         pkgs,
         ...
       }: {
-        devShells.default = with pkgs;
+        devShells.default = with pkgs; let
+          inherit (pkgs.beam.packages) erlangR24;
+        in
           mkShell {
             packages =
-              [elixir_1_12]
+              [erlangR24.elixir_1_12]
               ++ lib.optionals pkgs.stdenv.isDarwin [
                 darwin.apple_sdk.frameworks.CoreFoundation
                 darwin.apple_sdk.frameworks.CoreServices
