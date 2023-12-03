@@ -542,6 +542,66 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "update/2" do
+    setup do
+      params = Map.from_struct(user_mock())
+      [user: User.insert!(params)]
+    end
+
+    @update_params %{
+      username: "user-#{Ecto.UUID.generate()}"
+    }
+
+    test "updates an existing row", %{user: user} do
+      assert {:ok, %User{}} = User.update(user, @update_params)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt", %{user: user} do
+      user = User.insert!(Map.from_struct(user), repo: Repo2)
+      {:ok, user} = User.update(user, @update_params, repo: Repo2)
+
+      assert %User{id: uid} = user
+      assert ^user = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt", %{user: user} do
+      {:ok, user} = User.update(user, @update_params)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
+    end
+  end
+
+  describe "update!/2" do
+    setup do
+      params = Map.from_struct(user_mock())
+      [user: User.insert!(params)]
+    end
+
+    @update_params %{
+      username: "user-#{Ecto.UUID.generate()}"
+    }
+
+    test "updates an existing row", %{user: user} do
+      assert %User{} = User.update!(user, @update_params)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt", %{user: user} do
+      user = User.insert!(Map.from_struct(user), repo: Repo2)
+      user = User.update!(user, @update_params, repo: Repo2)
+
+      assert %User{id: uid} = user
+      assert ^user = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom Ecto changeset/2 function thru :changeset opt", %{user: user} do
+      user = User.update!(user, @update_params)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
+    end
+  end
+
   describe "update_all/2" do
     setup do: Enum.each(1..5, fn i -> user_mock(lucky_number: i) |> Repo.insert!() end)
 

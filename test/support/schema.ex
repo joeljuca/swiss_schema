@@ -21,8 +21,9 @@ defmodule SwissSchemaTest.User do
 
   def custom_changeset(%SwissSchemaTest.User{} = user, %{} = params) do
     user
-    |> cast(params, [:username, :email])
+    |> cast(params, [:username])
+    |> put_change(:email, "user-#{Ecto.UUID.generate()}@example.com")
     |> put_change(:lucky_number, System.unique_integer())
-    |> validate_required([:username, :email])
+    |> validate_required([:username, :email, :lucky_number])
   end
 end
