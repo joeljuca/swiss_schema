@@ -20,6 +20,11 @@ defmodule SwissSchema do
       defmodule MyApp.Accounts.User do
         use Ecto.Schema
         use SwissSchema, repo: MyApp.Repo
+
+        @impl true
+        def changeset(user \\ %__MODULE__{}, attrs) do
+          # here you set up your schema's changeset as usual
+        end
       end
 
   That's it, you should be good to go.
@@ -101,6 +106,20 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Query API"
   @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
+
+  @doc """
+  Defines the default changeset function to be used into all `SwissSchema` functions.
+
+  ## Examples
+
+      # Parses a new user
+      User.changeset(%User{}, %{name: "Jhon"})
+      iex> %Ecto.Changeset{valid?: true}
+
+  > See Ecto's [`Ecto.Changeset`](https://hexdocs.pm/ecto/Ecto.Changeset.html) for extensive info.
+  """
+  @doc group: "SwissSchema API"
+  @callback changeset(struct, map) :: Ecto.Changeset.t()
 
   @doc """
   Creates a new struct.
