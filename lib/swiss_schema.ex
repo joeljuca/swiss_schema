@@ -149,7 +149,7 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Schema API"
   @callback delete(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
@@ -169,7 +169,7 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Schema API"
   @callback delete!(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
 
@@ -372,7 +372,7 @@ defmodule SwissSchema do
   """
   @doc group: "SwissSchema API"
   @callback update(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
@@ -390,7 +390,7 @@ defmodule SwissSchema do
   """
   @doc group: "SwissSchema API"
   @callback update!(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
@@ -471,19 +471,19 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
+      def delete(%{__struct__: __MODULE__} = struct, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         delete = Function.capture(r, :delete, 2)
 
-        delete.(schema, opts)
+        delete.(struct, opts)
       end
 
       @impl SwissSchema
-      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
+      def delete!(%{__struct__: __MODULE__} = struct, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         delete! = Function.capture(r, :delete!, 2)
 
-        delete!.(schema, opts)
+        delete!.(struct, opts)
       end
 
       @impl SwissSchema
@@ -519,7 +519,7 @@ defmodule SwissSchema do
         get_by = Function.capture(r, :get_by, 3)
 
         case get_by.(__MODULE__, clauses, opts) do
-          %{} = schema -> {:ok, schema}
+          %{} = struct -> {:ok, struct}
           nil -> {:error, :not_found}
         end
       end
@@ -587,23 +587,23 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def update(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+      def update(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         update = Function.capture(r, :update, 2)
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        schema
+        struct
         |> changeset.(params)
         |> update.(opts)
       end
 
       @impl SwissSchema
-      def update!(%{__struct__: __MODULE__} = schema, %{} = params, opts \\ []) do
+      def update!(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         update! = Function.capture(r, :update!, 2)
         changeset = Function.capture(__MODULE__, :changeset, 2)
 
-        schema
+        struct
         |> changeset.(params)
         |> update!.(opts)
       end
