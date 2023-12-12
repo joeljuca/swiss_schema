@@ -1,5 +1,8 @@
 # SwissSchema Contribution Guide
 
+[![SwissSchema on GitHub](https://img.shields.io/badge/github-white "SwissSchema on GitHub")](https://github.com/joeljuca/swiss_schema "SwissSchema on GitHub")
+[![SwissSchema on Codeberg](https://img.shields.io/badge/codeberg-blue "SwissSchema on Codeberg")](https://codeberg.org/joeljuca/swiss_schema "SwissSchema on Codeberg")
+
 This document documents information about how to maintain and contribute to SwissSchema.
 
 ## Contributing Checklist
