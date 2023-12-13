@@ -24,6 +24,11 @@ test:
 test.watch:
 	find -E lib test -regex .*exs?$ | entr -c mix test
 
+test.full:
+	make lint \
+	&& make analyze \
+	&& make test
+
 docs:
 	mix docs
 
