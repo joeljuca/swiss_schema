@@ -20,6 +20,6 @@ The functions that Phoenix generates when you use `mix phx.gen.schema` to genera
 
 Also, I think that context modules should not contain CRUD code. Context modules are supposed to be the entry point for inner functionality (aka: a [Facade](https://en.wikipedia.org/wiki/Facade_pattern)). So, moving these CRUD functions to a shared FOSS project allows context modules to focus on what they're supposed to do.
 
-## Why licensing it under Apache License 2.0?
+## Why license it under Apache License 2.0?
 
 It's the same license used by [Elixir](https://elixir-lang.org).
