@@ -20,6 +20,11 @@ defmodule SwissSchema do
       defmodule MyApp.Accounts.User do
         use Ecto.Schema
         use SwissSchema, repo: MyApp.Repo
+
+        @impl true
+        def changeset(user \\ %__MODULE__{}, attrs) do
+          # here you set up your schema's changeset as usual
+        end
       end
 
   That's it, you should be good to go.
@@ -101,6 +106,20 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Query API"
   @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
+
+  @doc """
+  Defines the default changeset function to be used into all `SwissSchema` functions.
+
+  ## Examples
+
+      # Parses a new user
+      User.changeset(%User{}, %{name: "Jhon"})
+      iex> %Ecto.Changeset{valid?: true}
+
+  > See Ecto's [`Ecto.Changeset`](https://hexdocs.pm/ecto/Ecto.Changeset.html) for extensive info.
+  """
+  @doc group: "SwissSchema API"
+  @callback changeset(struct, map) :: Ecto.Changeset.t()
 
   @doc """
   Creates a new struct.
@@ -448,11 +467,13 @@ defmodule SwissSchema do
         all.(__MODULE__, opts)
       end
 
+      @default_changeset Function.capture(__MODULE__, :changeset, 2)
+
       @impl SwissSchema
       def create(%{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(r, :insert, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -463,7 +484,7 @@ defmodule SwissSchema do
       def create!(%{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(r, :insert!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -533,25 +554,33 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def insert(%{} = params, opts \\ []) do
+      def insert(source, opts \\ [])
+
+      def insert(%__MODULE__{} = schema, opts) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(r, :insert, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        insert.(schema, opts)
+      end
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert.(opts)
+      def insert(%Ecto.Changeset{data: %__MODULE__{}} = changeset, opts) do
+        r = Keyword.get(opts, :repo, unquote(repo))
+        insert = Function.capture(r, :insert, 2)
+        insert.(changeset, opts)
       end
 
       @impl SwissSchema
-      def insert!(%{} = params, opts \\ []) do
+      def insert!(source, opts \\ [])
+
+      def insert!(%__MODULE__{} = schema, opts) do
         r = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(r, :insert!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        insert!.(schema, opts)
+      end
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert!.(opts)
+      def insert!(%Ecto.Changeset{data: %__MODULE__{}} = changeset, opts) do
+        r = Keyword.get(opts, :repo, unquote(repo))
+        insert! = Function.capture(r, :insert!, 2)
+        insert!.(changeset, opts)
       end
 
       @impl SwissSchema
@@ -590,7 +619,7 @@ defmodule SwissSchema do
       def update(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         update = Function.capture(r, :update, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @default_changeset)
 
         struct
         |> changeset.(params)
@@ -601,7 +630,7 @@ defmodule SwissSchema do
       def update!(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         r = Keyword.get(opts, :repo, unquote(repo))
         update! = Function.capture(r, :update!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @default_changeset)
 
         struct
         |> changeset.(params)
