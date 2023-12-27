@@ -39,12 +39,27 @@ defmodule SwissSchemaTest do
 
   describe "use SwissSchema" do
     test "requires a :repo option" do
+      Application.put_env(:swiss_schema, :ecto_repos, nil)
+
       assert_raise KeyError, fn ->
         defmodule SwissSchemaTest.BadSchema do
           use Ecto.Schema
           use SwissSchema
         end
       end
+    end
+
+    test "load :repo option from default app config" do
+      Application.put_env(:swiss_schema, :ecto_repos, [Repo])
+
+      defmodule CustomSchema do
+        use Ecto.Schema
+        use SwissSchema
+      end
+
+      assert function_exported?(CustomSchema, :aggregate, 1)
+      assert function_exported?(CustomSchema, :aggregate, 2)
+      assert function_exported?(CustomSchema, :aggregate, 3)
     end
 
     test "define aggregate/1" do
