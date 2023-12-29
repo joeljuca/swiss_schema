@@ -31,8 +31,6 @@ defmodule SwissSchemaTest do
       Ecto.Adapters.SQLite3.storage_up(database: db_path)
       Ecto.Migrator.up(repo, 1, SwissSchemaTest.CreateUsers, log: false)
     end)
-
-    on_exit(fn -> File.rm_rf!(@database_dir) end)
   end
 
   setup do: on_exit(fn -> Repo.delete_all(User) && Repo2.delete_all(User) end)
