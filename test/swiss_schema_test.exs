@@ -23,7 +23,7 @@ defmodule SwissSchemaTest do
 
     Enum.each([Repo, Repo2], fn repo ->
       db_name = "#{repo}" |> String.split(".") |> List.last() |> String.downcase()
-      db_path = "#{@database_dir}/#{db_name}.db"
+      db_path = "#{@database_dir}/#{db_name}-#{Ecto.UUID.generate()}.db"
 
       start_link = Function.capture(repo, :start_link, 1)
       start_link.(database: db_path, log: false)
