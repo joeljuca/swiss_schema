@@ -20,6 +20,7 @@ defmodule SwissSchemaTest do
 
   setup_all do
     File.rm_rf!(@database_dir)
+    Process.sleep(1_000)
 
     Enum.each([Repo, Repo2], fn repo ->
       db_name = "#{repo}" |> String.split(".") |> List.last() |> String.downcase()
