@@ -25,8 +25,7 @@ defmodule SwissSchemaTest do
       db_name = "#{repo}" |> String.split(".") |> List.last() |> String.downcase()
       db_path = "#{@database_dir}/#{db_name}-#{Ecto.UUID.generate()}.db"
 
-      start_link = Function.capture(repo, :start_link, 1)
-      start_link.(database: db_path, log: false)
+      repo.start_link(database: db_path, log: false)
 
       Ecto.Adapters.SQLite3.storage_up(database: db_path)
       Ecto.Migrator.up(repo, 1, SwissSchemaTest.CreateUsers, log: false)
