@@ -413,7 +413,11 @@ defmodule SwissSchema do
             ) :: {non_neg_integer(), nil | [term()]}
 
   defmacro __using__(opts) do
-    repo = Keyword.fetch!(opts, :repo)
+    {:ok, app_name} = Mix.Project.config() |> Keyword.fetch(:app)
+
+    repos = Application.get_env(app_name, :ecto_repos)
+
+    repo = if repos, do: List.first(repos), else: Keyword.fetch!(opts, :repo)
 
     quote do
       @behaviour SwissSchema
