@@ -168,7 +168,7 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Schema API"
   @callback delete(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
@@ -188,7 +188,7 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Schema API"
   @callback delete!(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
 
@@ -391,7 +391,7 @@ defmodule SwissSchema do
   """
   @doc group: "SwissSchema API"
   @callback update(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
@@ -409,7 +409,7 @@ defmodule SwissSchema do
   """
   @doc group: "SwissSchema API"
   @callback update!(
-              schema :: Ecto.Schema.t(),
+              struct :: Ecto.Schema.t(),
               params :: %{required(atom()) => term()},
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
@@ -441,8 +441,8 @@ defmodule SwissSchema do
       def aggregate(type, opts \\ [])
 
       def aggregate(:count, opts) when is_list(opts) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        aggregate = Function.capture(r, :aggregate, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        aggregate = Function.capture(repo, :aggregate, 3)
 
         aggregate.(__MODULE__, :count, opts)
       end
@@ -453,16 +453,16 @@ defmodule SwissSchema do
 
       @impl SwissSchema
       def aggregate(type, field, opts) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        aggregate = Function.capture(r, :aggregate, 4)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        aggregate = Function.capture(repo, :aggregate, 4)
 
         aggregate.(__MODULE__, type, field, opts)
       end
 
       @impl SwissSchema
       def all(opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        all = Function.capture(r, :all, 2)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        all = Function.capture(repo, :all, 2)
 
         all.(__MODULE__, opts)
       end
@@ -492,33 +492,33 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def delete(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        delete = Function.capture(r, :delete, 2)
+      def delete(%{__struct__: __MODULE__} = struct, opts \\ []) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        delete = Function.capture(repo, :delete, 2)
 
-        delete.(schema, opts)
+        delete.(struct, opts)
       end
 
       @impl SwissSchema
-      def delete!(%{__struct__: __MODULE__} = schema, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        delete! = Function.capture(r, :delete!, 2)
+      def delete!(%{__struct__: __MODULE__} = struct, opts \\ []) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        delete! = Function.capture(repo, :delete!, 2)
 
-        delete!.(schema, opts)
+        delete!.(struct, opts)
       end
 
       @impl SwissSchema
       def delete_all(opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        delete_all = Function.capture(r, :delete_all, 2)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        delete_all = Function.capture(repo, :delete_all, 2)
 
         delete_all.(__MODULE__, opts)
       end
 
       @impl SwissSchema
       def get(id, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        get = Function.capture(r, :get, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        get = Function.capture(repo, :get, 3)
 
         case get.(__MODULE__, id, opts) do
           %{} = struct -> {:ok, struct}
@@ -528,27 +528,27 @@ defmodule SwissSchema do
 
       @impl SwissSchema
       def get!(id, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        get! = Function.capture(r, :get!, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        get! = Function.capture(repo, :get!, 3)
 
         get!.(__MODULE__, id, opts)
       end
 
       @impl SwissSchema
       def get_by(clauses, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        get_by = Function.capture(r, :get_by, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        get_by = Function.capture(repo, :get_by, 3)
 
         case get_by.(__MODULE__, clauses, opts) do
-          %{} = schema -> {:ok, schema}
+          %{} = struct -> {:ok, struct}
           nil -> {:error, :not_found}
         end
       end
 
       @impl SwissSchema
       def get_by!(clauses, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        get_by! = Function.capture(r, :get_by!, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        get_by! = Function.capture(repo, :get_by!, 3)
 
         get_by!.(__MODULE__, clauses, opts)
       end
@@ -585,32 +585,32 @@ defmodule SwissSchema do
 
       @impl SwissSchema
       def insert_all(entries, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        insert_all = Function.capture(r, :insert_all, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert_all = Function.capture(repo, :insert_all, 3)
 
         insert_all.(__MODULE__, entries, opts)
       end
 
       @impl SwissSchema
       def insert_or_update(%Ecto.Changeset{} = changeset, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        insert_or_update = Function.capture(r, :insert_or_update, 2)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert_or_update = Function.capture(repo, :insert_or_update, 2)
 
         insert_or_update.(changeset, opts)
       end
 
       @impl SwissSchema
       def insert_or_update!(%Ecto.Changeset{} = changeset, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        insert_or_update! = Function.capture(r, :insert_or_update!, 2)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert_or_update! = Function.capture(repo, :insert_or_update!, 2)
 
         insert_or_update!.(changeset, opts)
       end
 
       @impl SwissSchema
       def stream(opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        stream = Function.capture(r, :stream, 2)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        stream = Function.capture(repo, :stream, 2)
 
         stream.(__MODULE__, opts)
       end
@@ -621,7 +621,7 @@ defmodule SwissSchema do
         update = Function.capture(r, :update, 2)
         changeset = Keyword.get(opts, :changeset, @default_changeset)
 
-        schema
+        struct
         |> changeset.(params)
         |> update.(opts)
       end
@@ -632,15 +632,15 @@ defmodule SwissSchema do
         update! = Function.capture(r, :update!, 2)
         changeset = Keyword.get(opts, :changeset, @default_changeset)
 
-        schema
+        struct
         |> changeset.(params)
         |> update!.(opts)
       end
 
       @impl SwissSchema
       def update_all(updates, opts \\ []) do
-        r = Keyword.get(opts, :repo, unquote(repo))
-        update_all = Function.capture(r, :update_all, 3)
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        update_all = Function.capture(repo, :update_all, 3)
 
         update_all.(__MODULE__, updates, opts)
       end

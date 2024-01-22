@@ -46,7 +46,7 @@ jobs:
       - run: MIX_ENV=test mix do deps.get + deps.compile + compile
       - run: mix test
 
-  test_v1dot13:
+  v1dot13:
     runs-on: ubuntu-20.04
     name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
     strategy:
@@ -67,7 +67,7 @@ jobs:
       - run: MIX_ENV=test mix do deps.get + deps.compile + compile
       - run: mix test
 
-  test_v1dot12:
+  v1dot12:
     runs-on: ubuntu-20.04
     name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
     strategy:

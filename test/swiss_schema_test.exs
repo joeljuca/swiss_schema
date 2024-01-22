@@ -387,6 +387,14 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "exists?/1" do
+    # See: FAQ.md
+
+    test "is not implemented" do
+      refute User.__info__(:functions) |> Keyword.get(:exists?)
+    end
+  end
+
   describe "get/2" do
     test "returns {:error, :not_found} when row is absent" do
       assert {:error, :not_found} = User.get(1)

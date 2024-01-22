@@ -22,7 +22,7 @@ defmodule SwissSchema.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(env) when env in [:dev, :test], do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
@@ -35,8 +35,8 @@ defmodule SwissSchema.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "~> 3.10"},
-      {:ecto_sql, "~> 3.10"},
+      {:ecto, "~> 3.0"},
+      {:ecto_sql, "~> 3.0"},
 
       # dev/test
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
