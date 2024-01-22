@@ -20,6 +20,10 @@ defmodule SwissSchema do
       defmodule MyApp.Accounts.User do
         use Ecto.Schema
         use SwissSchema, repo: MyApp.Repo
+
+        def changeset(%__MODULE__{} = user, params) do
+          # Set up your schema's default changeset here
+        end
       end
 
   That's it, you should be good to go.
@@ -49,6 +53,22 @@ defmodule SwissSchema do
   >
   > So, `MyApp.Accounts.User` will be referred to as `User`.
   """
+
+  @doc """
+  Defines the default changeset function.
+
+  ## Examples
+
+      User.changeset(%User{}, %{name: "John"})
+      iex> %Ecto.Changeset{valid?: true}
+
+  > See Ecto's [`Ecto.Changeset`](https://hexdocs.pm/ecto/Ecto.Changeset.html) for extensive info.
+  """
+  @doc group: "SwissSchema API"
+  @callback changeset(
+              struct :: Ecto.Schema.t(),
+              params :: %{required(atom()) => term()}
+            ) :: Ecto.Changeset.t()
 
   @doc """
   Calculate the given aggregation.
