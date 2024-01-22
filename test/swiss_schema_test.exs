@@ -4,8 +4,6 @@ defmodule SwissSchemaTest do
   alias SwissSchemaTest.Repo2
   alias SwissSchemaTest.User
 
-  @database_dir Application.compile_env!(:swiss_schema, :database_dir)
-
   defp user_mock(opts \\ []) when is_list(opts) do
     username = Keyword.get(opts, :username, "user-#{Ecto.UUID.generate()}")
     email = Keyword.get(opts, :email, "#{username}@localhost")
@@ -19,20 +17,18 @@ defmodule SwissSchemaTest do
   end
 
   setup_all do
-    File.rm_rf!(@database_dir)
-
     Enum.each([Repo, Repo2], fn repo ->
-      db_name = "#{repo}" |> String.split(".") |> List.last() |> String.downcase()
-      db_path = "#{@database_dir}/#{db_name}.db"
+      Ecto.Adapters.Postgres.storage_up(repo.config)
 
-      start_link = Function.capture(repo, :start_link, 1)
-      start_link.(database: db_path, log: false)
-
-      Ecto.Adapters.SQLite3.storage_up(database: db_path)
+      repo.start_link(log: false)
       Ecto.Migrator.up(repo, 1, SwissSchemaTest.CreateUsers, log: false)
     end)
 
-    on_exit(fn -> File.rm_rf!(@database_dir) end)
+    on_exit(fn ->
+      Enum.each([Repo, Repo2], fn repo ->
+        Ecto.Adapters.Postgres.storage_down(repo.config)
+      end)
+    end)
   end
 
   setup do: on_exit(fn -> Repo.delete_all(User) && Repo2.delete_all(User) end)
@@ -222,7 +218,7 @@ defmodule SwissSchemaTest do
     setup do: 1..5 |> Enum.each(fn i -> user_mock(lucky_number: i) |> Repo.insert() end)
 
     test "aggregate(:avg, :field, _) process the :field average" do
-      assert User.aggregate(:avg, :lucky_number) == 3.0
+      assert Decimal.compare("3.0", User.aggregate(:avg, :lucky_number))
     end
 
     test "aggregate(:count, :field, _) process the :field count" do
@@ -245,7 +241,6 @@ defmodule SwissSchemaTest do
       1..5 |> Enum.each(fn i -> user_mock(lucky_number: i) |> Repo2.insert() end)
 
       [
-        {:avg, 3.0},
         {:count, 5},
         {:max, 5},
         {:min, 1},
@@ -254,6 +249,8 @@ defmodule SwissSchemaTest do
       |> Enum.each(fn {type, val} ->
         assert ^val = User.aggregate(type, :lucky_number, repo: Repo2)
       end)
+
+      assert Decimal.compare("3.0", User.aggregate(:avg, :lucky_number, repo: Repo2))
     end
   end
 
@@ -484,7 +481,7 @@ defmodule SwissSchemaTest do
           user_mock() |> Map.from_struct(),
           user_mock() |> Map.from_struct()
         ]
-        |> Enum.map(&Map.drop(&1, [:__meta__]))
+        |> Enum.map(&Map.drop(&1, [:__meta__, :id]))
 
       assert {3, _} = User.insert_all(params_list, repo: Repo2)
 
@@ -511,7 +508,7 @@ defmodule SwissSchemaTest do
 
     test "accepts a custom Ecto repo thru :repo opt" do
       1..3
-      |> Enum.map(fn _ -> user_mock() |> Map.from_struct() |> Map.drop([:__meta__]) end)
+      |> Enum.map(fn _ -> user_mock() |> Map.from_struct() |> Map.drop([:__meta__, :id]) end)
       |> then(&Repo2.insert_all(User, &1))
 
       assert {3, _} = User.update_all([set: [is_active: false]], repo: Repo2)

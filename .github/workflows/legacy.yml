@@ -11,6 +11,18 @@ jobs:
       matrix:
         otp: ["24", "25"]
         elixir: ["1.15"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
@@ -32,6 +44,18 @@ jobs:
       matrix:
         otp: ["23", "24", "25"]
         elixir: ["1.14"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
@@ -53,6 +77,18 @@ jobs:
       matrix:
         otp: ["22", "23", "24", "25"]
         elixir: ["1.13"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
@@ -74,6 +110,18 @@ jobs:
       matrix:
         otp: ["22", "23", "24"]
         elixir: ["1.12"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
