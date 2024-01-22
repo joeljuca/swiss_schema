@@ -36,3 +36,7 @@ swiss_schema-*.tar
 
 # asdf. https://asdf-vm.com
 .tool-versions
+
+# direnv. https://direnv.net
+.env
+.envrc
