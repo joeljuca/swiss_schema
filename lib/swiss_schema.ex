@@ -438,6 +438,10 @@ defmodule SwissSchema do
     quote do
       @behaviour SwissSchema
 
+      @_swiss_schema %{
+        default_changeset: Function.capture(__MODULE__, :changeset, 2)
+      }
+
       @impl SwissSchema
       def aggregate(type, opts \\ [])
 
@@ -472,7 +476,7 @@ defmodule SwissSchema do
       def create(%{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(repo, :insert, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -483,7 +487,7 @@ defmodule SwissSchema do
       def create!(%{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(repo, :insert!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -556,7 +560,7 @@ defmodule SwissSchema do
       def insert(%{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(repo, :insert, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -567,7 +571,7 @@ defmodule SwissSchema do
       def insert!(%{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         insert! = Function.capture(repo, :insert!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct(__MODULE__)
         |> changeset.(params)
@@ -610,7 +614,7 @@ defmodule SwissSchema do
       def update(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         update = Function.capture(repo, :update, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct
         |> changeset.(params)
@@ -621,7 +625,7 @@ defmodule SwissSchema do
       def update!(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         update! = Function.capture(repo, :update!, 2)
-        changeset = Function.capture(__MODULE__, :changeset, 2)
+        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
         struct
         |> changeset.(params)

@@ -290,6 +290,13 @@ defmodule SwissSchemaTest do
       assert %User{} = user
       assert ^user = Repo2.get(User, user.id)
     end
+
+    test "accepts a custom changeset function thru :changeset opt" do
+      params = user_mock() |> Map.take([:username, :email])
+
+      assert {:ok, user} = User.create(params, changeset: &User.changeset_custom/2)
+      assert is_integer(user.lucky_number)
+    end
   end
 
   describe "create!/2" do
@@ -313,6 +320,15 @@ defmodule SwissSchemaTest do
 
       assert %User{} = user
       assert ^user = Repo2.get!(User, user.id)
+    end
+
+    test "accepts a custom changeset function thru :changeset opt" do
+      params = user_mock() |> Map.take([:username, :email])
+
+      user = User.create!(params, changeset: &User.changeset_custom/2)
+
+      assert %User{} = user
+      assert is_integer(user.lucky_number)
     end
   end
 
@@ -457,6 +473,13 @@ defmodule SwissSchemaTest do
 
       assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom changeset function thru :changeset opt" do
+      params = user_mock() |> Map.take([:username, :email])
+
+      assert {:ok, %User{} = user} = User.insert(params, changeset: &User.changeset_custom/2)
+      assert is_integer(user.lucky_number)
     end
   end
 
