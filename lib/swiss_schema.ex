@@ -57,6 +57,8 @@ defmodule SwissSchema do
   @doc """
   Defines the default changeset function.
 
+  This callback is used by database-touching functions to validate changes.
+
   ## Examples
 
       User.changeset(%User{}, %{name: "John"})
