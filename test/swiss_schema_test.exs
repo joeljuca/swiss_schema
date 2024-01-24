@@ -483,6 +483,29 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "insert!/2" do
+    test "inserts a row" do
+      user = user_mock() |> Map.from_struct()
+
+      assert %User{} = user = User.insert!(user)
+      assert ^user = Repo.get!(User, user.id)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      params = user_mock() |> Map.from_struct()
+
+      assert %User{id: uid} = User.insert!(params, repo: Repo2)
+      assert %User{} = Repo2.get!(User, uid)
+    end
+
+    test "accepts a custom changeset function thru :changeset opt" do
+      params = user_mock() |> Map.take([:username, :email])
+
+      assert user = User.insert!(params, changeset: &User.changeset_custom/2)
+      assert is_integer(user.lucky_number)
+    end
+  end
+
   describe "insert_all/2" do
     test "inserts multiple rows at once" do
       params_list =
