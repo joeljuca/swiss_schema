@@ -2,7 +2,7 @@
 
 [![Licensed under Apache 2.0](https://img.shields.io/hexpm/l/swiss_schema)](LICENSE)
 [![Hex version](https://img.shields.io/hexpm/v/swiss_schema)](https://hex.pm/packages/swiss_schema)
-[![Quality status](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml/badge.svg)](https://github.com/joeljuca/swiss_schema/actions/workflows/quality.yml)
+[![CI status](https://github.com/joeljuca/swiss_schema/actions/workflows/main.yml/badge.svg)](https://github.com/joeljuca/swiss_schema/actions/workflows/main.yml)
 [![Follow Joel Jucá on Twitter](https://img.shields.io/twitter/follow/holyshtjoe "Follow Joel Jucá on Twitter")](https://twitter.com/holyshtjoe "Follow Joel Jucá on Twitter")
 
 **A Swiss Army knife for your Ecto schemas**
