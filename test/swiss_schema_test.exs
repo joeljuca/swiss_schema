@@ -1,5 +1,5 @@
 defmodule SwissSchemaTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias SwissSchemaTest.Repo
   alias SwissSchemaTest.Repo2
   alias SwissSchemaTest.User
@@ -41,6 +41,19 @@ defmodule SwissSchemaTest do
           use SwissSchema
         end
       end
+    end
+
+    test "load :repo option from default app config" do
+      Application.put_env(:swiss_schema, SwissSchema, Repo, persistent: false)
+
+      defmodule CustomSchema do
+        use Ecto.Schema
+        use SwissSchema
+      end
+
+      assert function_exported?(CustomSchema, :aggregate, 1)
+      assert function_exported?(CustomSchema, :aggregate, 2)
+      assert function_exported?(CustomSchema, :aggregate, 3)
     end
 
     test "define aggregate/1" do
