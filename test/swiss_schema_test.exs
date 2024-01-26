@@ -1,5 +1,5 @@
 defmodule SwissSchemaTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias SwissSchemaTest.Repo
   alias SwissSchemaTest.Repo2
   alias SwissSchemaTest.User
@@ -35,8 +35,6 @@ defmodule SwissSchemaTest do
 
   describe "use SwissSchema" do
     test "requires a :repo option" do
-      Application.put_env(:swiss_schema, :ecto_repos, nil)
-
       assert_raise KeyError, fn ->
         defmodule SwissSchemaTest.BadSchema do
           use Ecto.Schema
@@ -46,7 +44,7 @@ defmodule SwissSchemaTest do
     end
 
     test "load :repo option from default app config" do
-      Application.put_env(:swiss_schema, :ecto_repos, [Repo])
+      Application.put_env(:swiss_schema, SwissSchema, Repo, persistent: false)
 
       defmodule CustomSchema do
         use Ecto.Schema
