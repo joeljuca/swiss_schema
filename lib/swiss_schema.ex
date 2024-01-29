@@ -378,6 +378,7 @@ defmodule SwissSchema do
 
   > See Ecto's [`stream/2`](https://hexdocs.pm/ecto/Ecto.Repo.html#c:stream/2) for extensive info.
   """
+  @doc deprecated: "Use Ecto.Repo's stream/2 instead"
   @doc group: "Ecto.Repo Query API"
   @callback stream(opts :: Keyword.t()) :: Enum.t()
 
@@ -604,6 +605,7 @@ defmodule SwissSchema do
         insert_or_update!.(changeset, opts)
       end
 
+      @deprecated "Use Ecto.Repo's stream/2 instead"
       @impl SwissSchema
       def stream(opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
