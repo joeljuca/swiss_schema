@@ -4,6 +4,7 @@
 [![Hex version](https://img.shields.io/hexpm/v/swiss_schema)](https://hex.pm/packages/swiss_schema)
 [![CI status](https://github.com/joeljuca/swiss_schema/actions/workflows/main.yml/badge.svg)](https://github.com/joeljuca/swiss_schema/actions/workflows/main.yml)
 [![Follow Joel Jucá on Twitter](https://img.shields.io/twitter/follow/holyshtjoe "Follow Joel Jucá on Twitter")](https://twitter.com/holyshtjoe "Follow Joel Jucá on Twitter")
+[![Joel Jucá on LinkedIn](https://img.shields.io/badge/%2Fjoeljuca-blue?logo=linkedin "Joel Jucá on LinkedIn")](https://www.linkedin.com/in/joeljuca "Joel Jucá on LinkedIn")
 
 **A Swiss Army knife for your Ecto schemas**
 
