@@ -17,6 +17,7 @@ A task list for whenever a new version is being released.
   - [ ] Update suggested version in `readme.md`
   - [ ] Update suggested version in `lib/swiss_schema.ex`
   - [ ] Update the Changelog with important changes
+    - [ ] Update the Unreleased diff URL down in the footer
   - [ ] `git commit -am 'chore: bump version to v1.2.3'`
 - [ ] **Tag the version-bump commit**
   - [ ] Eg.: `git tag -a -s v1.2.3 -m v1.2.3`
