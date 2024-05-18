@@ -6,9 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- feat: support custom changesets thru a `:changeset` opt by [@zoedsoupe](https://github.com/zoedsoupe) (`dbca855`)
+- chore: add a @callback for `changeset/2` (`14f83ed`)
+
 ### Changed
 
-- docs: reformats [CHANGELOG.md](CHANGELOG.md) based on [Keep a Changelog](https://keepachangelog.com)
+- build: downgrade Ecto dep version to ~> 3.0 (`7613030`)
+- docs: reformats [CHANGELOG.md](CHANGELOG.md) based on [Keep a Changelog](https://keepachangelog.com) (`30c96ab`)
 
 ### Deprecated
 
@@ -16,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
-- fix: stop raising `Ecto.MultipleResultsError` on `get_by/2` (`2e70461 `)
+- fix: stop raising `Ecto.MultipleResultsError` on `get_by/2` (`2e70461`)
 
 ## [v0.5.1] - 2023-11-14
 
