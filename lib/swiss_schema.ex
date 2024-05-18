@@ -436,7 +436,11 @@ defmodule SwissSchema do
             ) :: {non_neg_integer(), nil | [term()]}
 
   defmacro __using__(opts) do
-    repo = Keyword.fetch!(opts, :repo)
+    repo =
+      case Keyword.fetch(opts, :repo) do
+        {:ok, repo} -> repo
+        _ -> Application.fetch_env!(:swiss_schema, :default_repo)
+      end
 
     quote do
       @behaviour SwissSchema
