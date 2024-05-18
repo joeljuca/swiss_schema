@@ -549,6 +549,8 @@ defmodule SwissSchema do
           %{} = struct -> {:ok, struct}
           nil -> {:error, :not_found}
         end
+      rescue
+        error -> {:error, error}
       end
 
       @impl SwissSchema

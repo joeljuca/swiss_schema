@@ -429,6 +429,13 @@ defmodule SwissSchemaTest do
       assert {:error, :not_found} = User.get_by(username: "root")
     end
 
+    test "returns {:error, %Ecto.MultipleResultsError{}} when query returns multiple rows" do
+      user_mock(username: "john", lucky_number: 7) |> Repo.insert!()
+      user_mock(username: "jane", lucky_number: 7) |> Repo.insert!()
+
+      assert {:error, %Ecto.MultipleResultsError{}} = User.get_by(lucky_number: 7)
+    end
+
     test "returns a row by ID" do
       user_mock(username: "root") |> Repo.insert!()
 
