@@ -34,13 +34,43 @@ defmodule SwissSchemaTest do
   setup do: on_exit(fn -> Repo.delete_all(User) && Repo2.delete_all(User) end)
 
   describe "use SwissSchema" do
-    test "requires a :repo option" do
-      assert_raise KeyError, fn ->
+    test "requires a :repo opt" do
+      assert_raise ArgumentError, fn ->
         defmodule SwissSchemaTest.BadSchema do
+          @moduledoc false
           use Ecto.Schema
           use SwissSchema
+          import Ecto.Changeset
+
+          schema "users" do
+          end
+
+          @impl SwissSchema
+          def changeset(_, _), do: cast(%__MODULE__{}, %{}, [])
         end
       end
+    end
+
+    test "accepts a :repo thru a :default_repo env" do
+      Application.put_env(:swiss_schema, :default_repo, SwissSchemaTest.Repo)
+
+      defmodule SwissSchemaTest.NoRepo do
+        @moduledoc false
+        use Ecto.Schema
+        use SwissSchema
+        import Ecto.Changeset
+
+        schema "users" do
+        end
+
+        @impl SwissSchema
+        def changeset(_, _), do: cast(%__MODULE__{}, %{}, [])
+      end
+
+      assert function_exported?(SwissSchemaTest.NoRepo, :create, 2)
+
+      # Clean up
+      Application.delete_env(:swiss_schema, :default_repo)
     end
 
     test "define aggregate/1" do
