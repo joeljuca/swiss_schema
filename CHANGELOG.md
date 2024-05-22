@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- feat: global `:repo` opt through config `:default_repo` by [@danubiolima](http://github.com/danubiolima) (`eac9e91`)
 - feat: support custom changesets thru a `:changeset` opt by [@zoedsoupe](https://github.com/zoedsoupe) (`dbca855`)
 - chore: add a @callback for `changeset/2` (`14f83ed`)
 
