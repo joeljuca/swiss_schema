@@ -40,7 +40,6 @@ defmodule SwissSchema.MixProject do
 
       # dev/test
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
-      {:ecto_sqlite3, "~> 0.10.3", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.30.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:postgrex, ">= 0.0.0", only: [:dev, :test], runtime: false}
