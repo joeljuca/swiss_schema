@@ -36,11 +36,11 @@ defmodule SwissSchema.MixProject do
   defp deps do
     [
       {:ecto, "~> 3.0"},
-      {:ecto_sql, "~> 3.0"},
 
       # dev/test
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.30.1", only: [:dev], runtime: false},
+      {:ecto_sql, "~> 3.0", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:postgrex, ">= 0.0.0", only: [:dev, :test], runtime: false}
     ]
