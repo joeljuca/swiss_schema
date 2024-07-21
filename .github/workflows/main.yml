@@ -4,8 +4,8 @@ on:
   push:
 
 env:
-  OTP_VERSION: "26"
-  ELIXIR_VERSION: "1.16"
+  OTP_VERSION: "27"
+  ELIXIR_VERSION: "1.17"
 
 jobs:
   style:
