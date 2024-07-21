@@ -18,7 +18,7 @@ defmodule SwissSchemaTest do
 
   setup_all do
     Enum.each([Repo, Repo2], fn repo ->
-      Ecto.Adapters.Postgres.storage_up(repo.config)
+      Ecto.Adapters.Postgres.storage_up(repo.config())
 
       repo.start_link(log: false)
       Ecto.Migrator.up(repo, 1, SwissSchemaTest.CreateUsers, log: false)
@@ -26,7 +26,7 @@ defmodule SwissSchemaTest do
 
     on_exit(fn ->
       Enum.each([Repo, Repo2], fn repo ->
-        Ecto.Adapters.Postgres.storage_down(repo.config)
+        Ecto.Adapters.Postgres.storage_down(repo.config())
       end)
     end)
   end
