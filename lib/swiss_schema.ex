@@ -565,26 +565,52 @@ defmodule SwissSchema do
         get_by!.(__MODULE__, clauses, opts)
       end
 
-      @impl SwissSchema
-      def insert(%{} = params, opts \\ []) do
-        repo = Keyword.get(opts, :repo, unquote(repo))
-        insert = Function.capture(repo, :insert, 2)
-        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
+      def insert(struct_or_changeset, opts \\ [])
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert.(opts)
+      @impl SwissSchema
+      def insert(%Ecto.Changeset{data: %module{}} = changeset, opts) do
+        case module do
+          __MODULE__ -> perform_insert(changeset, opts)
+          _ -> {:error, :not_same_schema_module}
+        end
       end
 
       @impl SwissSchema
-      def insert!(%{} = params, opts \\ []) do
-        repo = Keyword.get(opts, :repo, unquote(repo))
-        insert! = Function.capture(repo, :insert!, 2)
-        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
+      def insert(%module{} = struct, opts) when is_struct(struct) do
+        case module do
+          __MODULE__ -> perform_insert(struct, opts)
+          _ -> {:error, :not_same_schema_module}
+        end
+      end
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert!.(opts)
+      defp perform_insert(source, opts) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert = Function.capture(repo, :insert, 2)
+        insert.(source, opts)
+      end
+
+      def insert!(struct_or_changeset, opts \\ [])
+
+      @impl SwissSchema
+      def insert!(%Ecto.Changeset{data: %module{}} = changeset, opts) do
+        case module do
+          __MODULE__ -> perform_insert!(changeset, opts)
+          _ -> {:error, :not_same_schema_module}
+        end
+      end
+
+      @impl SwissSchema
+      def insert!(%module{} = struct, opts) when is_struct(struct) do
+        case module do
+          __MODULE__ -> perform_insert!(struct, opts)
+          _ -> {:error, :not_same_schema_module}
+        end
+      end
+
+      defp perform_insert!(source, opts) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert = Function.capture(repo, :insert!, 2)
+        insert.(source, opts)
       end
 
       @impl SwissSchema
