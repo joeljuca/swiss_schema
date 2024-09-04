@@ -311,7 +311,7 @@ defmodule SwissSchema do
   """
   @doc group: "Ecto.Repo Schema API"
   @callback insert(
-              params :: %{required(atom()) => term()},
+              entry :: Ecto.Schema.t() | Ecto.Changeset.t(),
               opts :: Keyword.t()
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
@@ -566,14 +566,20 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def insert(%{} = params, opts \\ []) do
+      def insert(param, opts \\ [])
+
+      def insert(%{__struct__: __MODULE__} = struct, opts) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         insert = Function.capture(repo, :insert, 2)
-        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
-        struct(__MODULE__)
-        |> changeset.(params)
-        |> insert.(opts)
+        insert.(struct, opts)
+      end
+
+      def insert(%Ecto.Changeset{data: %{__struct__: __MODULE__}} = changeset, opts) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        insert = Function.capture(repo, :insert, 2)
+
+        insert.(changeset, opts)
       end
 
       @impl SwissSchema

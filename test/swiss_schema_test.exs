@@ -498,25 +498,37 @@ defmodule SwissSchemaTest do
   end
 
   describe "insert/2" do
+    test "requires an Ecto schema or changeset" do
+      user = user_mock()
+      map = user |> Map.from_struct()
+
+      assert_raise FunctionClauseError, fn -> User.insert(map) end
+      assert {:ok, %User{}} = User.insert(user)
+
+      changeset = Ecto.Changeset.cast(user, %{}, User.__schema__(:fields))
+
+      assert {:ok, %User{}} = User.insert(changeset)
+    end
+
+    test "rejects invalid Ecto changesets" do
+      user = user_mock()
+      changeset = Ecto.Changeset.cast(user, %{lucky_number: "invalid"}, User.__schema__(:fields))
+
+      assert {:error, %Ecto.Changeset{}} = User.insert(changeset)
+    end
+
     test "inserts a row" do
-      user = user_mock() |> Map.from_struct()
+      user = user_mock()
 
       assert {:ok, %User{} = user} = User.insert(user)
       assert ^user = Repo.get!(User, user.id)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      params = user_mock() |> Map.from_struct()
+      params = user_mock()
 
       assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
-    end
-
-    test "accepts a custom changeset function thru :changeset opt" do
-      params = user_mock() |> Map.take([:username, :email])
-
-      assert {:ok, %User{} = user} = User.insert(params, changeset: &User.changeset_custom/2)
-      assert is_integer(user.lucky_number)
     end
   end
 
