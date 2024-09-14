@@ -412,8 +412,7 @@ defmodule SwissSchema do
   """
   @doc group: "SwissSchema API"
   @callback update!(
-              struct :: Ecto.Schema.t(),
-              params :: %{required(atom()) => term()},
+              changeset :: Ecto.Changeset.t(),
               opts :: Keyword.t()
             ) :: Ecto.Schema.t()
 
@@ -640,14 +639,11 @@ defmodule SwissSchema do
       end
 
       @impl SwissSchema
-      def update!(%{__struct__: __MODULE__} = struct, %{} = params, opts \\ []) do
+      def update!(%Ecto.Changeset{data: %{__struct__: __MODULE__}} = struct, opts \\ []) do
         repo = Keyword.get(opts, :repo, unquote(repo))
         update! = Function.capture(repo, :update!, 2)
-        changeset = Keyword.get(opts, :changeset, @_swiss_schema.default_changeset)
 
-        struct
-        |> changeset.(params)
-        |> update!.(opts)
+        update!.(struct, opts)
       end
 
       @impl SwissSchema
