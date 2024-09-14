@@ -205,12 +205,12 @@ defmodule SwissSchemaTest do
       assert function_exported?(SwissSchemaTest.User, :insert_or_update!, 2)
     end
 
-    test "define update/2" do
-      assert function_exported?(SwissSchemaTest.User, :update, 2)
+    test "define update/1" do
+      assert function_exported?(SwissSchemaTest.User, :update, 1)
     end
 
-    test "define update/3" do
-      assert function_exported?(SwissSchemaTest.User, :update, 3)
+    test "define update/2" do
+      assert function_exported?(SwissSchemaTest.User, :update, 2)
     end
 
     test "define update!/2" do
@@ -563,6 +563,41 @@ defmodule SwissSchemaTest do
 
       assert %User{id: uid} = User.insert!(params, repo: Repo2)
       assert %User{} = Repo2.get!(User, uid)
+    end
+  end
+
+  describe "update/2" do
+    test "requires an Ecto changeset" do
+      user = user_mock() |> Repo.insert!()
+      map = user |> Map.from_struct()
+
+      for map <- [user, map], do: assert_raise(FunctionClauseError, fn -> User.update(map) end)
+
+      changeset = Ecto.Changeset.cast(user, %{}, User.__schema__(:fields))
+      assert {:ok, %User{}} = User.update(changeset)
+    end
+
+    test "rejects invalid Ecto changesets" do
+      user = user_mock() |> Repo.insert!()
+      changeset = Ecto.Changeset.cast(user, %{lucky_number: "invalid"}, User.__schema__(:fields))
+
+      assert {:error, %Ecto.Changeset{}} = User.update(changeset)
+    end
+
+    test "inserts a row" do
+      user = user_mock() |> Repo.insert!()
+      changeset = Ecto.Changeset.cast(user, %{lucky_number: 123}, User.__schema__(:fields))
+
+      assert {:ok, %User{}} = User.update(changeset)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      user = user_mock() |> Repo2.insert!()
+      uid = user.id
+      ln = Enum.random(1_000..9_999)
+      changeset = Ecto.Changeset.cast(user, %{lucky_number: ln}, [:lucky_number])
+
+      assert {:ok, %User{id: ^uid, lucky_number: ^ln}} = User.update(changeset, repo: Repo2)
     end
   end
 
