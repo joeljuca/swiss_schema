@@ -255,42 +255,56 @@ defmodule SwissSchemaTest do
   end
 
   describe "aggregate/3" do
-    setup do: 1..5 |> Enum.each(fn i -> user_mock(lucky_number: i) |> Repo.insert() end)
+    setup do: Enum.each(1..5, &(user_mock(lucky_number: &1) |> Repo.insert()))
 
     test "aggregate(:avg, :field, _) process the :field average" do
-      assert Decimal.compare("3.0", User.aggregate(:avg, :lucky_number))
+      assert {:ok, avg} = User.aggregate(:avg, :lucky_number)
+      assert Decimal.compare("3.0", avg)
+
+      Repo.transaction(fn ->
+        Repo.delete_all(User)
+
+        assert {:ok, nil} = User.aggregate(:avg, :lucky_number)
+        Repo.rollback(nil)
+      end)
     end
 
     test "aggregate(:count, :field, _) process the :field count" do
-      assert User.aggregate(:count, :lucky_number) == 5
-    end
-
-    test "aggregate(:max, :field, _) process the :field max" do
-      assert User.aggregate(:max, :lucky_number) == 5
+      assert {:ok, 5} = User.aggregate(:count, :lucky_number)
     end
 
     test "aggregate(:min, :field, _) process the :field min" do
-      assert User.aggregate(:min, :lucky_number) == 1
+      assert {:ok, 1} = User.aggregate(:min, :lucky_number)
+    end
+
+    test "aggregate(:max, :field, _) process the :field max" do
+      assert {:ok, 5} = User.aggregate(:max, :lucky_number)
     end
 
     test "aggregate(:sum, :field, _) process the :field sum" do
-      assert User.aggregate(:sum, :lucky_number) == 15
+      assert {:ok, 15} = User.aggregate(:sum, :lucky_number)
+    end
+
+    test "rescues from exceptions to return an :error tuple" do
+      for type <- [:count, :min, :max, :sum] do
+        Repo.transaction(fn ->
+          Ecto.Adapters.SQL.query(Repo, "ALTER TABLE users RENAME TO u")
+
+          assert {:error, _} = User.aggregate(type, :lucky_number)
+        end)
+      end
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      1..5 |> Enum.each(fn i -> user_mock(lucky_number: i) |> Repo2.insert() end)
+      Enum.each(1..5, &(user_mock(lucky_number: &1) |> Repo2.insert!()))
 
-      [
-        {:count, 5},
-        {:max, 5},
-        {:min, 1},
-        {:sum, 15}
-      ]
+      assert {:ok, avg} = User.aggregate(:avg, :lucky_number, repo: Repo2)
+      assert Decimal.compare("3.0", avg)
+
+      [count: 5, min: 1, max: 5, sum: 15]
       |> Enum.each(fn {type, val} ->
-        assert ^val = User.aggregate(type, :lucky_number, repo: Repo2)
+        assert {:ok, ^val} = User.aggregate(type, :lucky_number, repo: Repo2)
       end)
-
-      assert Decimal.compare("3.0", User.aggregate(:avg, :lucky_number, repo: Repo2))
     end
   end
 

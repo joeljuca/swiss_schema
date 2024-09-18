@@ -109,7 +109,7 @@ defmodule SwissSchema do
               type :: :avg | :count | :max | :min | :sum,
               field :: atom(),
               opts :: Keyword.t()
-            ) :: term() | nil
+            ) :: {:ok, integer() | nil} | {:error, term()}
 
   @doc """
   Fetches all entries from the respective data store.
@@ -468,7 +468,9 @@ defmodule SwissSchema do
         repo = Keyword.get(opts, :repo, unquote(repo))
         aggregate = Function.capture(repo, :aggregate, 4)
 
-        aggregate.(__MODULE__, type, field, opts)
+        {:ok, aggregate.(__MODULE__, type, field, opts)}
+      rescue
+        error -> {:error, error}
       end
 
       @impl SwissSchema
