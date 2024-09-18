@@ -89,7 +89,7 @@ defmodule SwissSchema do
   @callback aggregate(
               type :: :count,
               opts :: Keyword.t()
-            ) :: term() | nil
+            ) :: {:ok, integer()} | {:error, term()}
 
   @doc """
   Calculate the given `aggregate` over the given `field`.
@@ -454,7 +454,9 @@ defmodule SwissSchema do
         repo = Keyword.get(opts, :repo, unquote(repo))
         aggregate = Function.capture(repo, :aggregate, 3)
 
-        aggregate.(__MODULE__, :count, opts)
+        {:ok, aggregate.(__MODULE__, :count, opts)}
+      rescue
+        error -> {:error, error}
       end
 
       def aggregate(type, field) when is_atom(field) do

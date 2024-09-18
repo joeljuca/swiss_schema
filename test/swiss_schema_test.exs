@@ -234,13 +234,23 @@ defmodule SwissSchemaTest do
     test "counts all rows in the schema table" do
       Repo.insert(user_mock())
 
-      assert 1 == User.aggregate(:count)
+      assert {:ok, 1} == User.aggregate(:count)
+    end
+
+    test "rescues from exceptions to return an :error tuple" do
+      Repo.insert(user_mock())
+
+      Repo.transaction(fn ->
+        Ecto.Adapters.SQL.query(Repo, "ALTER TABLE users RENAME TO u")
+
+        assert {:error, _} = User.aggregate(:count)
+      end)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
       Repo2.insert(user_mock())
 
-      assert 1 == User.aggregate(:count, repo: Repo2)
+      assert {:ok, 1} == User.aggregate(:count, repo: Repo2)
     end
   end
 
