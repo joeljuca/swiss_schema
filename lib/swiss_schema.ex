@@ -122,7 +122,7 @@ defmodule SwissSchema do
   > See Ecto's [`all/2`](https://hexdocs.pm/ecto/Ecto.Repo.html#c:all/2) for extensive info.
   """
   @doc group: "Ecto.Repo Query API"
-  @callback all(opts :: Keyword.t()) :: [Ecto.Schema.t() | term()]
+  @callback all(opts :: Keyword.t()) :: {:ok, [Ecto.Schema.t()]} | {:error, term()}
 
   @doc """
   Creates a new struct.
@@ -478,7 +478,9 @@ defmodule SwissSchema do
         repo = Keyword.get(opts, :repo, unquote(repo))
         all = Function.capture(repo, :all, 2)
 
-        all.(__MODULE__, opts)
+        {:ok, all.(__MODULE__, opts)}
+      rescue
+        error -> {:error, error}
       end
 
       @impl SwissSchema

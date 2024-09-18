@@ -309,16 +309,27 @@ defmodule SwissSchemaTest do
   end
 
   describe "all/1" do
-    test "returns all rows in a schema table" do
-      user_mock() |> Repo.insert()
+    setup do
+      for _ <- 1..3, do: user_mock() |> Repo.insert!()
+      :ok
+    end
 
-      assert [%User{}] = User.all()
+    test "returns all rows in the schema table" do
+      assert {:ok, [%User{} | _]} = User.all()
+    end
+
+    test "rescues from exceptions to return an :error tuple" do
+      Repo.transaction(fn ->
+        Ecto.Adapters.SQL.query(Repo, "ALTER TABLE users RENAME TO u")
+
+        assert {:error, _} = User.all()
+      end)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      1..3 |> Enum.each(fn _ -> user_mock() |> Repo2.insert() end)
+      for _ <- 1..3, do: user_mock() |> Repo2.insert!()
 
-      assert [%User{}, %User{}, %User{}] = User.all(repo: Repo2)
+      assert {:ok, [%User{}, %User{}, %User{}]} = User.all(repo: Repo2)
     end
   end
 
@@ -699,13 +710,13 @@ defmodule SwissSchemaTest do
     test "set multiple columns at once" do
       assert {5, _} = User.update_all(set: [lucky_number: 5])
 
-      User.all() |> Enum.each(fn user -> assert 5 == user.lucky_number end)
+      Repo.all(User) |> Enum.each(fn user -> assert 5 == user.lucky_number end)
     end
 
     test "increment multiple columns at once" do
       assert {5, _} = User.update_all(inc: [lucky_number: 3])
 
-      assert [4, 5, 6, 7, 8] = User.all() |> Enum.map(& &1.lucky_number) |> Enum.sort()
+      assert [4, 5, 6, 7, 8] = Repo.all(User) |> Enum.map(& &1.lucky_number) |> Enum.sort()
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
