@@ -466,6 +466,16 @@ defmodule SwissSchemaTest do
       assert {:error, :not_found} = User.get(1)
     end
 
+    test "rescues from exceptions to return an :error tuple" do
+      user = user_mock() |> Repo.insert!()
+
+      Repo.transaction(fn ->
+        Ecto.Adapters.SQL.query(Repo, "ALTER TABLE users RENAME TO u")
+
+        assert {:error, _} = User.get(user.id)
+      end)
+    end
+
     test "returns a row by ID" do
       %User{id: id} = user_mock() |> Repo.insert!()
 

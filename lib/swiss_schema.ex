@@ -229,7 +229,7 @@ defmodule SwissSchema do
   @callback get(
               id :: term(),
               opts :: Keyword.t()
-            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found}
+            ) :: {:ok, Ecto.Schema.t()} | {:ok, term()} | {:error, :not_found | term()}
 
   @doc """
   Similar to `c:get/2` but raises `Ecto.NoResultsError` if no entry was found.
@@ -541,6 +541,8 @@ defmodule SwissSchema do
           %{} = struct -> {:ok, struct}
           nil -> {:error, :not_found}
         end
+      rescue
+        error -> {:error, error}
       end
 
       @impl SwissSchema
