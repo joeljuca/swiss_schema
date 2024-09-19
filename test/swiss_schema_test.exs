@@ -458,9 +458,7 @@ defmodule SwissSchemaTest do
   describe "exists?/1" do
     # See: FAQ.md
 
-    test "is not implemented" do
-      refute User.__info__(:functions) |> Keyword.get(:exists?)
-    end
+    test "is not implemented", do: refute(User.__info__(:functions) |> Keyword.get(:exists?))
   end
 
   describe "get/2" do
