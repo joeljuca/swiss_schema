@@ -435,13 +435,23 @@ defmodule SwissSchemaTest do
     test "deletes all rows in a schema table" do
       user_mock() |> Repo.insert!()
 
-      assert {1, _} = User.delete_all()
+      assert {:ok, {1, _}} = User.delete_all()
+    end
+
+    test "rescues from exceptions to return an :error tuple" do
+      user_mock() |> Repo.insert!()
+
+      Repo.transaction(fn ->
+        Ecto.Adapters.SQL.query(Repo, "ALTER TABLE users RENAME TO u")
+
+        assert {:error, _} = User.delete_all()
+      end)
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
       user_mock() |> Repo2.insert!()
 
-      assert {1, _} = User.delete_all(repo: Repo2)
+      assert {:ok, {1, _}} = User.delete_all(repo: Repo2)
     end
   end
 

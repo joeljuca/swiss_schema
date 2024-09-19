@@ -207,7 +207,8 @@ defmodule SwissSchema do
   > See Ecto's [`delete_all/2`](https://hexdocs.pm/ecto/Ecto.Repo.html#c:delete_all/2) for extensive info.
   """
   @doc group: "Ecto.Repo Query API"
-  @callback delete_all(opts :: Keyword.t()) :: {non_neg_integer(), nil | [term()]}
+  @callback delete_all(opts :: Keyword.t()) ::
+              {:ok, {non_neg_integer(), nil | [term()]}} | {:error, term()}
 
   @doc """
   Fetches an entry by the primary key.
@@ -526,7 +527,9 @@ defmodule SwissSchema do
         repo = Keyword.get(opts, :repo, unquote(repo))
         delete_all = Function.capture(repo, :delete_all, 2)
 
-        delete_all.(__MODULE__, opts)
+        {:ok, delete_all.(__MODULE__, opts)}
+      rescue
+        error -> {:error, error}
       end
 
       @impl SwissSchema
