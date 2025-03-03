@@ -1,5 +1,6 @@
 defmodule SwissSchemaTest do
   use ExUnit.Case
+  alias SwissSchemaTest.Book
   alias SwissSchemaTest.Repo
   alias SwissSchemaTest.Repo2
   alias SwissSchemaTest.User
@@ -13,6 +14,16 @@ defmodule SwissSchemaTest do
       username: username,
       email: email,
       lucky_number: lucky_number
+    }
+  end
+
+  defp book_mock(opts \\ []) when is_list(opts) do
+    title = Keyword.get(opts, :title, "book-title-#{Ecto.UUID.generate()}")
+    description = Keyword.get(opts, :description, "book-description-long-#{Ecto.UUID.generate()}")
+
+    %Book{
+      title: title,
+      description: description
     }
   end
 
@@ -499,47 +510,65 @@ defmodule SwissSchemaTest do
 
   describe "insert/2" do
     test "inserts a row" do
-      user = user_mock() |> Map.from_struct()
+      user_changeset()
+      |> assert_user()
+    end
 
-      assert {:ok, %User{} = user} = User.insert(user)
-      assert ^user = Repo.get!(User, user.id)
+    test "accepts a struct" do
+      user_mock()
+      |> assert_user()
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      params = user_mock() |> Map.from_struct()
-
-      assert {:ok, %User{id: uid}} = User.insert(params, repo: Repo2)
-      assert %User{} = Repo2.get!(User, uid)
+      user_changeset()
+      |> assert_user(Repo2)
     end
 
-    test "accepts a custom changeset function thru :changeset opt" do
-      params = user_mock() |> Map.take([:username, :email])
+    test "not accepts changeset from other schema" do
+      changeset = book_changeset()
 
-      assert {:ok, %User{} = user} = User.insert(params, changeset: &User.changeset_custom/2)
-      assert is_integer(user.lucky_number)
+      assert {:error, :not_same_schema_module} = User.insert(changeset)
+    end
+
+    defp user_changeset() do
+      user_mock() |> Ecto.Changeset.cast(%{}, [:username, :email, :lucky_number])
+    end
+
+    defp book_changeset() do
+      book_mock() |> Book.changeset(%{})
+    end
+
+    defp assert_user(changeset_or_struct, repo \\ Repo) do
+      assert {:ok, %User{id: uid}} = User.insert(changeset_or_struct, repo: repo)
+      assert %User{} = repo.get!(User, uid)
     end
   end
 
   describe "insert!/2" do
     test "inserts a row" do
-      user = user_mock() |> Map.from_struct()
+      user_changeset()
+      |> assert_user!()
+    end
 
-      assert %User{} = user = User.insert!(user)
-      assert ^user = Repo.get!(User, user.id)
+    test "accepts a struct" do
+      user_mock()
+      |> assert_user!()
     end
 
     test "accepts a custom Ecto repo thru :repo opt" do
-      params = user_mock() |> Map.from_struct()
-
-      assert %User{id: uid} = User.insert!(params, repo: Repo2)
-      assert %User{} = Repo2.get!(User, uid)
+      user_changeset()
+      |> assert_user!(Repo2)
     end
 
-    test "accepts a custom changeset function thru :changeset opt" do
-      params = user_mock() |> Map.take([:username, :email])
+    test "not accepts changeset from other schema" do
+      changeset = book_changeset()
 
-      assert user = User.insert!(params, changeset: &User.changeset_custom/2)
-      assert is_integer(user.lucky_number)
+      assert {:error, :not_same_schema_module} = User.insert!(changeset)
+    end
+
+    defp assert_user!(changeset_or_struct, repo \\ Repo) do
+      assert %User{id: uid} = User.insert!(changeset_or_struct, repo: repo)
+      assert %User{} = repo.get!(User, uid)
     end
   end
 
