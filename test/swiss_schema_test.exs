@@ -133,6 +133,10 @@ defmodule SwissSchemaTest do
       assert function_exported?(SwissSchemaTest.User, :get_by!, 2)
     end
 
+    test "define query/1" do
+      assert function_exported?(SwissSchemaTest.User, :query, 1)
+    end
+
     test "define stream/0" do
       assert function_exported?(SwissSchemaTest.User, :stream, 0)
     end
@@ -571,6 +575,29 @@ defmodule SwissSchemaTest do
       Enum.each(params_list, fn %{username: username} ->
         assert %User{} = User.get_by!([username: username], repo: Repo2)
       end)
+    end
+  end
+
+  describe "query/2" do
+    setup do: Enum.each(1..3, fn i -> user_mock(lucky_number: i) |> Repo.insert!() end)
+
+    test "accept a function to customize the query" do
+      assert {:ok, [%User{}, %User{}, %User{}]} = User.query(fn q -> q end)
+    end
+
+    test "captures Ecto.QueryError exceptions and return them as error tuples" do
+      import Ecto.Query, only: [where: 3]
+
+      assert {:error, %Ecto.QueryError{}} =
+               User.query(fn q -> q |> where([u], u.wrong_field == 123) end)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      1..3
+      |> Enum.map(fn _ -> user_mock() |> Map.drop([:__struct__, :__meta__, :id]) end)
+      |> then(&Repo2.insert_all(User, &1))
+
+      assert {:ok, [%User{}, %User{}, %User{}]} = User.query(fn q -> q end, repo: Repo2)
     end
   end
 
