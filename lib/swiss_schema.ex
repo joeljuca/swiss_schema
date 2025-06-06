@@ -389,6 +389,21 @@ defmodule SwissSchema do
               {:ok, list(Ecto.Schema.t())} | {:error, %Ecto.QueryError{}}
 
   @doc """
+  Allow complex queries to be made over the data store.
+
+  `c:query!/2` accepts a function to intercept the query and modify as needed.
+
+  ## Examples
+
+      iex> import Ecto.Query, only: [where: 2]
+      iex> User.query!(fn query -> query |> where([u], u.name == "John Lennon") end)
+      [%User{name: "John Lennon"}]
+  """
+  @doc group: "SwissSchema API"
+  @callback query!(hook :: (Ecto.Query.t() -> Ecto.Query.t()), opts :: Keyword.t()) ::
+              list(Ecto.Schema.t())
+
+  @doc """
   Returns a lazy enumerable that emits all entries from the data store.
 
   > See Ecto's [`stream/2`](https://hexdocs.pm/ecto/Ecto.Repo.html#c:stream/2) for extensive info.
@@ -642,6 +657,20 @@ defmodule SwissSchema do
       rescue
         error in Ecto.QueryError -> {:error, error}
         exception -> reraise exception, __STACKTRACE__
+      end
+
+      @impl SwissSchema
+      def query!(hook, opts \\ [])
+          when is_function(hook, 1) do
+        repo = Keyword.get(opts, :repo, unquote(repo))
+        all = Function.capture(repo, :all, 2)
+
+        query =
+          from(s in __MODULE__)
+          |> select([s], s)
+          |> then(hook)
+
+        all.(query, opts)
       end
 
       @deprecated "Use Ecto.Repo's stream/2 instead"

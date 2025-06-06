@@ -601,6 +601,22 @@ defmodule SwissSchemaTest do
     end
   end
 
+  describe "query!/2" do
+    setup do: Enum.each(1..3, fn i -> user_mock(lucky_number: i) |> Repo.insert!() end)
+
+    test "accept a function to customize the query" do
+      assert [%User{}, %User{}, %User{}] = User.query!(fn q -> q end)
+    end
+
+    test "accepts a custom Ecto repo thru :repo opt" do
+      1..3
+      |> Enum.map(fn _ -> user_mock() |> Map.drop([:__struct__, :__meta__, :id]) end)
+      |> then(&Repo2.insert_all(User, &1))
+
+      assert [%User{}, %User{}, %User{}] = User.query!(fn q -> q end, repo: Repo2)
+    end
+  end
+
   describe "update_all/2" do
     setup do: Enum.each(1..5, fn i -> user_mock(lucky_number: i) |> Repo.insert!() end)
 
