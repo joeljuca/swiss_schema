@@ -4,12 +4,78 @@ on:
   push:
 
 jobs:
-  v1dot15:
-    runs-on: ubuntu-20.04
+  v1dot17:
+    runs-on: ubuntu-22.04
     name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
     strategy:
       matrix:
-        otp: ["24", "25"]
+        otp: ["25", "26", "27"]
+        elixir: ["1.17"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
+
+  v1dot16:
+    runs-on: ubuntu-22.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["25", "26"]
+        elixir: ["1.16"]
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/cache@v3
+        with:
+          path: deps
+          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
+
+      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
+      - run: mix test
+
+  v1dot15:
+    runs-on: ubuntu-22.04
+    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
+    strategy:
+      matrix:
+        otp: ["25", "26"]
         elixir: ["1.15"]
     services:
       postgres:
@@ -38,78 +104,12 @@ jobs:
       - run: mix test
 
   v1dot14:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
     strategy:
       matrix:
-        otp: ["23", "24", "25"]
+        otp: ["25", "26"]
         elixir: ["1.14"]
-    services:
-      postgres:
-        image: postgres:16.1-alpine3.19
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: ${{ matrix.otp }}
-          elixir-version: ${{ matrix.elixir }}
-      - uses: actions/cache@v3
-        with:
-          path: deps
-          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
-
-      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
-      - run: mix test
-
-  v1dot13:
-    runs-on: ubuntu-20.04
-    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
-    strategy:
-      matrix:
-        otp: ["22", "23", "24", "25"]
-        elixir: ["1.13"]
-    services:
-      postgres:
-        image: postgres:16.1-alpine3.19
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: ${{ matrix.otp }}
-          elixir-version: ${{ matrix.elixir }}
-      - uses: actions/cache@v3
-        with:
-          path: deps
-          key: deps_${{ runner.os }}_${{ matrix.otp }}_${{ matrix.elixir }}_${{ hashFiles('mix.lock') }}
-
-      - run: MIX_ENV=test mix do deps.get + deps.compile + compile
-      - run: mix test
-
-  v1dot12:
-    runs-on: ubuntu-20.04
-    name: elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}
-    strategy:
-      matrix:
-        otp: ["22", "23", "24"]
-        elixir: ["1.12"]
     services:
       postgres:
         image: postgres:16.1-alpine3.19

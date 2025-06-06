@@ -5,7 +5,7 @@ on:
 
 env:
   OTP_VERSION: "27"
-  ELIXIR_VERSION: "1.17"
+  ELIXIR_VERSION: "1.18"
 
 jobs:
   style:
