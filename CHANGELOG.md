@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [v0.7.0] - 2025-06-06
+
+- feat: add callback `query!/2` (`e31ee72`)
+- feat: add callback `query/2` (`d809572`)
+
 ## [v0.6.0] - 2024-05-22
 
 ### Added
@@ -113,7 +118,8 @@ Also, the project is now properly adjusted to support more environments by runni
 
 First release.
 
-[Unreleased]: https://github.com/joeljuca/swiss_schema/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/joeljuca/swiss_schema/compare/v0.7.0...HEAD
+[v0.7.0]: https://github.com/joeljuca/swiss_schema/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/joeljuca/swiss_schema/compare/v0.5.1...v0.6.0
 [v0.5.1]: https://github.com/joeljuca/swiss_schema/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/joeljuca/swiss_schema/compare/v0.4.1...v0.5.0

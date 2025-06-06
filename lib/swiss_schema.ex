@@ -9,7 +9,7 @@ defmodule SwissSchema do
       def deps do
       [
         # ...
-        {:swiss_schema, "~> 0.6"}
+        {:swiss_schema, "~> 0.7"}
       ]
       end
 
