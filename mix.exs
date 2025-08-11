@@ -13,6 +13,7 @@ defmodule SwissSchema.MixProject do
       deps: deps(),
 
       # Hex
+      name: "SwissSchema",
       package: package(),
       version: @version,
       description: "A Swiss Army knife for your Ecto schemas",
