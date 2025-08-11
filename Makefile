@@ -54,3 +54,12 @@ docs:
 .PHONY: docs.watch
 docs.watch:
 	find -E . -regex .*exs?$ | grep -Ev "(\.elixir_ls|\.git|_build|deps|test)" | entr -c mix docs
+
+
+# Git
+
+branch ?= main
+
+.PHONY: git.push
+git.push:
+	for remote in $$(git remote); do git push $$remote $(branch); done
